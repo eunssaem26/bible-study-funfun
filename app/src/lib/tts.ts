@@ -22,8 +22,13 @@ function manifestLookup(text: string): string | null {
 
 function playMp3(hash: string, opts: { rate?: number }): boolean {
   if (currentAudio) {
+    // Detach handlers BEFORE pause/cleanup so the in-flight play() promise
+    // rejecting with AbortError doesn't trigger our speech-synthesis fallback
+    // (which would produce overlapping audio with the new sentence — most
+    // visible on iOS Safari, where pause() reliably aborts the play promise).
+    currentAudio.onerror = null
+    currentAudio.onplaying = null
     currentAudio.pause()
-    currentAudio.src = ''
     currentAudio = null
   }
   const audio = new Audio(`/audio/${hash}.mp3`)
@@ -31,19 +36,21 @@ function playMp3(hash: string, opts: { rate?: number }): boolean {
   audio.playbackRate = opts.rate ?? 1
   audio.onplaying = () => { audioUnlocked = true }
   audio.onerror = () => {
+    if (audio !== currentAudio) return // we already moved on; ignore stale error
     console.warn('[TTS] mp3 load failed for', hash, '— falling back to speechSynthesis')
     speakViaSynthesis(reverseLookup(hash) || '', opts)
   }
-  // Catch promise rejection (autoplay blocked, decode error, etc.) and fall
-  // back to speech synthesis so the user still hears something.
+  currentAudio = audio
   const playPromise = audio.play()
   if (playPromise && typeof playPromise.catch === 'function') {
     playPromise.catch(err => {
+      // AbortError fires when we intentionally pause to play a different file.
+      // Anything else (autoplay block, decode failure) is worth falling back on.
+      if (err?.name === 'AbortError' || audio !== currentAudio) return
       console.warn('[TTS] audio.play() rejected:', err?.name || err)
       speakViaSynthesis(reverseLookup(hash) || '', opts)
     })
   }
-  currentAudio = audio
   return true
 }
 
