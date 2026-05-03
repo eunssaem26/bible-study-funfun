@@ -55,8 +55,8 @@ export const stories: Story[] = [
     titleKr: '천지창조',
     emoji: '✦',
     cover: 'from-amber-100 via-rose-100 to-blue-100',
-    description: '하나님이 세상을 만드신 첫 사흘. 빛이 생기고, 하늘이 펼쳐지고, 땅과 바다가 나뉘어요.',
-    totalLessons: 1,
+    description: '하나님이 세상을 만드신 일곱 날. 빛이 생기고, 하늘이 열리고, 동물과 사람이 만들어졌어요.',
+    totalLessons: 2,
     order: 1,
   },
   {
@@ -464,6 +464,214 @@ export const creationLesson1: Lesson = {
       ],
       correctIndex: 3,
       explanation: '해와 달은 넷째 날에 만드셨어요 — 다음 lesson에서 만나요!',
+    },
+  ],
+}
+
+export const creationLesson2: Lesson = {
+  id: 'creation-2',
+  storyId: 'creation',
+  lessonNum: 2,
+  title: 'Lights, Life, and Rest',
+  titleKr: '천지창조 — 넷째부터 일곱째 날',
+  description: '하나님이 해와 달과 별을 만드시고, 새와 물고기와 동물, 그리고 사람을 만드신 후 일곱째 날에 쉬셨어요.',
+  estimatedMinutes: 5,
+  source: {
+    label: 'Genesis 1:14–2:3, World English Bible (WEB) — Public Domain',
+    url: 'https://ebible.org/web/GEN01.htm',
+  },
+  sentences: [
+    {
+      korean: '하나님이 "낮과 밤을 나누는 빛들이 하늘에 있으라" 하셨어요.',
+      reference: 'Genesis 1:14a',
+      english: 'God said, "Let there be lights in the expanse of the sky to divide the day from the night."',
+      words: [
+        { word: 'lights', meaning: '빛, 빛나는 것 (복수형)', pronunciation: '/laɪts/' },
+        { word: 'expanse', meaning: '넓게 펼쳐진 곳, 광활한 공간', pronunciation: '/ɪkˈspæns/' },
+        { word: 'divide', meaning: '나누다, 가르다', pronunciation: '/dɪˈvaɪd/', example: 'divide the cake — 케이크를 나누다' },
+        { word: 'night', meaning: '밤', pronunciation: '/naɪt/' },
+      ],
+    },
+    {
+      korean: '"그 빛들이 계절과 날과 해를 나타내는 표가 되게 하여라."',
+      reference: 'Genesis 1:14b',
+      english: 'Let them be for signs to mark seasons, days, and years.',
+      words: [
+        { word: 'signs', meaning: '표, 표시 (복수형)', pronunciation: '/saɪnz/' },
+        { word: 'mark', meaning: '표시하다, 나타내다', pronunciation: '/mɑːrk/' },
+        { word: 'seasons', meaning: '계절 (복수형)', pronunciation: '/ˈsiːzənz/' },
+        { word: 'years', meaning: '해, 년 (복수형)', pronunciation: '/jɪərz/' },
+      ],
+    },
+    {
+      korean: '하나님이 큰 빛 두 개를 만드셨어요. 큰 빛은 낮을, 작은 빛은 밤을 다스리게 하셨고, 별들도 만드셨어요.',
+      reference: 'Genesis 1:16',
+      english: 'God made two great lights: the greater light to rule the day, and the lesser light to rule the night. He also made the stars.',
+      words: [
+        { word: 'greater', meaning: '더 큰 (great의 비교급)', pronunciation: '/ˈɡreɪtər/' },
+        { word: 'rule', meaning: '다스리다, 통치하다', pronunciation: '/ruːl/' },
+        { word: 'lesser', meaning: '더 작은 (less의 비교급)', pronunciation: '/ˈlɛsər/' },
+        { word: 'stars', meaning: '별 (복수형)', pronunciation: '/stɑːrz/' },
+      ],
+    },
+    {
+      korean: '저녁이 되고 아침이 되니, 넷째 날이었어요.',
+      reference: 'Genesis 1:19',
+      english: 'There was evening and there was morning, a fourth day.',
+      words: [
+        { word: 'evening', meaning: '저녁', pronunciation: '/ˈiːvnɪŋ/' },
+        { word: 'morning', meaning: '아침', pronunciation: '/ˈmɔːrnɪŋ/' },
+        { word: 'fourth', meaning: '넷째, 네 번째', pronunciation: '/fɔːrθ/' },
+      ],
+    },
+    {
+      korean: '하나님이 "물에 살아있는 것들이 가득하고, 새들은 땅 위를 날아라" 하셨어요.',
+      reference: 'Genesis 1:20',
+      english: 'God said, "Let the waters teem with living creatures, and let birds fly above the earth."',
+      words: [
+        { word: 'teem', meaning: '가득하다, 우글거리다', pronunciation: '/tiːm/' },
+        { word: 'creatures', meaning: '생물, 살아있는 것들 (복수형)', pronunciation: '/ˈkriːtʃərz/' },
+        { word: 'birds', meaning: '새 (복수형)', pronunciation: '/bɜːrdz/' },
+        { word: 'fly', meaning: '날다', pronunciation: '/flaɪ/', example: 'birds fly — 새가 날다' },
+      ],
+    },
+    {
+      korean: '하나님이 큰 바다 생물들과, 물에서 움직이는 모든 살아있는 것을 만드셨어요.',
+      reference: 'Genesis 1:21a',
+      english: 'God created the great sea creatures and every living thing that moves in the waters.',
+      words: [
+        { word: 'sea', meaning: '바다', pronunciation: '/siː/' },
+        { word: 'living', meaning: '살아있는', pronunciation: '/ˈlɪvɪŋ/' },
+        { word: 'moves', meaning: '움직인다 (move의 3인칭 단수)', pronunciation: '/muːvz/' },
+      ],
+    },
+    {
+      korean: '하나님이 그것들을 축복하시며 "번성하고 늘어나라" 하셨어요. 저녁이 되고 아침이 되니, 다섯째 날이었어요.',
+      reference: 'Genesis 1:22–23',
+      english: 'God blessed them, saying, "Be fruitful, and multiply." There was evening and there was morning, a fifth day.',
+      words: [
+        { word: 'blessed', meaning: '축복했다 (bless의 과거형)', pronunciation: '/blɛst/' },
+        { word: 'fruitful', meaning: '열매 맺는, 번성하는', pronunciation: '/ˈfruːtfəl/' },
+        { word: 'multiply', meaning: '늘어나다, 번식하다', pronunciation: '/ˈmʌltɪplaɪ/' },
+        { word: 'fifth', meaning: '다섯째, 다섯 번째', pronunciation: '/fɪfθ/' },
+      ],
+    },
+    {
+      korean: '하나님이 "땅이 살아있는 것들을 내라. 가축과 기는 것들과 들짐승을 내라" 하셨어요.',
+      reference: 'Genesis 1:24',
+      english: 'God said, "Let the earth produce living creatures: livestock, creeping things, and animals of the earth."',
+      words: [
+        { word: 'produce', meaning: '내다, 만들어 내다', pronunciation: '/prəˈduːs/' },
+        { word: 'livestock', meaning: '가축', pronunciation: '/ˈlaɪvstɒk/' },
+        { word: 'creeping', meaning: '기는, 기어다니는', pronunciation: '/ˈkriːpɪŋ/' },
+        { word: 'animals', meaning: '동물 (복수형)', pronunciation: '/ˈænɪməlz/' },
+      ],
+    },
+    {
+      korean: '그리고 하나님이 "우리의 형상대로, 우리를 닮은 사람을 만들자" 하셨어요.',
+      reference: 'Genesis 1:26a',
+      english: 'Then God said, "Let us make man in our image, after our likeness."',
+      words: [
+        { word: 'man', meaning: '사람, 인간', pronunciation: '/mæn/' },
+        { word: 'image', meaning: '형상, 모습', pronunciation: '/ˈɪmɪdʒ/' },
+        { word: 'likeness', meaning: '닮음, 모습', pronunciation: '/ˈlaɪknəs/' },
+      ],
+    },
+    {
+      korean: '하나님이 자기 형상대로 사람을 만드셨어요. 남자와 여자를 만드셨어요.',
+      reference: 'Genesis 1:27',
+      english: 'God created man in his own image. Male and female he created them.',
+      words: [
+        { word: 'own', meaning: '자기 자신의', pronunciation: '/oʊn/' },
+        { word: 'male', meaning: '남자, 수컷', pronunciation: '/meɪl/' },
+        { word: 'female', meaning: '여자, 암컷', pronunciation: '/ˈfiːmeɪl/' },
+      ],
+    },
+    {
+      korean: '하나님이 그들을 축복하시며 "번성하고 늘어나서 땅에 가득해라" 하셨어요.',
+      reference: 'Genesis 1:28a',
+      english: 'God blessed them and said, "Be fruitful, multiply, and fill the earth."',
+      words: [
+        { word: 'fill', meaning: '채우다, 가득 채우다', pronunciation: '/fɪl/', example: 'fill the cup — 컵을 채우다' },
+        { word: 'earth', meaning: '땅, 지구', pronunciation: '/ɜːrθ/' },
+      ],
+    },
+    {
+      korean: '하나님이 만드신 모든 것을 보시니 정말 좋았어요. 저녁이 되고 아침이 되니, 여섯째 날이었어요.',
+      reference: 'Genesis 1:31',
+      english: 'God saw everything that he had made, and behold, it was very good. There was evening and there was morning, a sixth day.',
+      words: [
+        { word: 'everything', meaning: '모든 것', pronunciation: '/ˈɛvriθɪŋ/' },
+        { word: 'behold', meaning: '보라 (감탄적 표현)', pronunciation: '/bɪˈhoʊld/' },
+        { word: 'sixth', meaning: '여섯째, 여섯 번째', pronunciation: '/sɪksθ/' },
+      ],
+    },
+    {
+      korean: '하늘과 땅과 그 안의 모든 것이 다 만들어졌어요.',
+      reference: 'Genesis 2:1',
+      english: 'The heavens, the earth, and all their vast array were finished.',
+      words: [
+        { word: 'vast', meaning: '광대한, 엄청 큰', pronunciation: '/væst/' },
+        { word: 'array', meaning: '무리, 배열', pronunciation: '/əˈreɪ/' },
+        { word: 'finished', meaning: '끝났다, 완성됐다', pronunciation: '/ˈfɪnɪʃt/' },
+      ],
+    },
+    {
+      korean: '하나님이 일곱째 날을 축복하시고 거룩하게 하셨어요. 모든 일을 마치고 그 날에 쉬셨기 때문이에요.',
+      reference: 'Genesis 2:3',
+      english: 'God blessed the seventh day and made it holy, because he rested from all the work he had done.',
+      words: [
+        { word: 'seventh', meaning: '일곱째, 일곱 번째', pronunciation: '/ˈsɛvənθ/' },
+        { word: 'holy', meaning: '거룩한, 신성한', pronunciation: '/ˈhoʊli/' },
+        { word: 'rested', meaning: '쉬었다 (rest의 과거형)', pronunciation: '/ˈrɛstɪd/' },
+        { word: 'work', meaning: '일, 작업', pronunciation: '/wɜːrk/' },
+      ],
+    },
+  ],
+  quiz: [
+    {
+      question: '넷째 날, 하나님이 만드신 빛들의 역할은 무엇이었나요?',
+      options: [
+        '계절과 날과 해를 나타내는 표가 됨',
+        '바다를 가르는 것',
+        '동물에게 음식을 주는 것',
+        '사람의 영혼이 됨',
+      ],
+      correctIndex: 0,
+      explanation: 'Genesis 1:14에서 빛들은 "for signs to mark seasons, days, and years" — 계절·날·해를 나타내는 표로 만들어졌어요.',
+    },
+    {
+      question: '다섯째 날에 하나님이 만드신 것은?',
+      options: [
+        '해와 달과 별',
+        '바다 생물과 새',
+        '사람과 들짐승',
+        '나무와 풀',
+      ],
+      correctIndex: 1,
+      explanation: '다섯째 날에는 물에 사는 생물들(sea creatures)과 새(birds)가 만들어졌어요.',
+    },
+    {
+      question: '하나님이 사람을 만드실 때 어떻게 만드셨나요?',
+      options: [
+        '바람과 불로',
+        '진흙으로만',
+        '하나님의 형상(image)대로',
+        '동물의 모습으로',
+      ],
+      correctIndex: 2,
+      explanation: '"Let us make man in our image" — 하나님은 자신의 형상대로 사람을 만드셨고, 남자와 여자로 만드셨어요.',
+    },
+    {
+      question: '일곱째 날에 하나님은 무엇을 하셨나요?',
+      options: [
+        '바다를 만드셨어요',
+        '쉬시고, 그 날을 거룩하게 하셨어요',
+        '새로운 동물을 만드셨어요',
+        '사람을 다시 만드셨어요',
+      ],
+      correctIndex: 1,
+      explanation: '하나님은 모든 일을 마치고 일곱째 날에 쉬셨고(rested), 그 날을 축복하시고 거룩하게(holy) 하셨어요.',
     },
   ],
 }
@@ -3345,6 +3553,7 @@ export const danielLesson2: Lesson = {
 
 export const lessons: Record<string, Lesson> = {
   'creation-1': creationLesson1,
+  'creation-2': creationLesson2,
   'david-1': davidLesson1,
   'david-2': davidLesson2,
   'noah-1': noahLesson1,
