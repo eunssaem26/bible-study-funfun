@@ -1,20 +1,10 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import {
-  getLesson,
-  getSentenceLevel,
-  getLessonSource,
-  lessonSupportsLevel,
-  type WordDef,
-  type Level,
-} from '../content/lessons'
+import { getLesson, type WordDef } from '../content/lessons'
 import WordPopup from '../components/WordPopup'
-import VoicePicker from '../components/VoicePicker'
-import LevelToggle from '../components/LevelToggle'
 import Ona from '../components/Ona'
-import { speak } from '../lib/tts'
+import { speak, isSpeechUnlocked } from '../lib/tts'
 import { useVocab } from '../lib/vocab'
-import { useLevel } from '../lib/level'
 
 type Phase = 'reading' | 'quiz'
 
@@ -23,7 +13,6 @@ export default function Lesson() {
   const navigate = useNavigate()
   const lesson = getLesson(storyId!, lessonNum!)
 
-  const [level, setLevel] = useLevel()
   const { has, save } = useVocab()
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState<Phase>('reading')
@@ -46,18 +35,13 @@ export default function Lesson() {
     )
   }
 
-  const availableLevels: Level[] = ['easy']
-  if (lessonSupportsLevel(lesson, 'standard')) availableLevels.push('standard')
-  const effectiveLevel: Level = availableLevels.includes(level) ? level : 'easy'
-
   const total = lesson.sentences.length
   const progress = phase === 'reading'
     ? (index / total) * 0.7
     : 0.7 + (quizIdx / lesson.quiz.length) * 0.3
 
   const sentence = lesson.sentences[index]
-  const slot = getSentenceLevel(sentence, effectiveLevel)
-  const source = getLessonSource(lesson, effectiveLevel)
+  const source = lesson.source
 
   const speakSentence = (text: string) => speak(text, { rate: 0.92 })
 
@@ -119,35 +103,24 @@ export default function Lesson() {
               style={{ width: `${Math.max(progress * 100, 3)}%` }}
             />
           </div>
-          <VoicePicker />
           <span className="text-xs font-semibold text-zinc-500 tabular-nums w-10 text-right">
             {phase === 'reading' ? `${index + 1}/${total}` : `퀴즈`}
           </span>
         </div>
       </header>
 
-      {/* Level toggle */}
-      {phase === 'reading' && availableLevels.length > 1 && (
-        <div className="px-5 pt-5 pb-0 flex justify-center">
-          <LevelToggle
-            level={effectiveLevel}
-            onChange={setLevel}
-            available={availableLevels}
-          />
-        </div>
-      )}
-
       {/* Content */}
       <div className="flex-1 px-5 py-6">
         {phase === 'reading' && (
           <ReadingView
-            slot={slot}
+            english={sentence.english}
+            words={sentence.words}
             korean={sentence.korean}
             reference={sentence.reference}
             showKorean={showKorean}
             onToggleKorean={() => setShowKorean(!showKorean)}
             onWordTap={setActiveWord}
-            onSpeak={() => speakSentence(slot.english)}
+            onSpeak={() => speakSentence(sentence.english)}
             sourceLabel={source.label}
             sourceUrl={source.url}
           />
@@ -195,7 +168,8 @@ export default function Lesson() {
 }
 
 function ReadingView({
-  slot,
+  english,
+  words,
   korean,
   reference,
   showKorean,
@@ -205,7 +179,8 @@ function ReadingView({
   sourceLabel,
   sourceUrl,
 }: {
-  slot: { english: string; words: WordDef[] }
+  english: string
+  words: WordDef[]
   korean: string
   reference: string
   showKorean: boolean
@@ -217,18 +192,21 @@ function ReadingView({
 }) {
   const wordMap = useMemo(() => {
     const map = new Map<string, WordDef>()
-    slot.words.forEach(w => map.set(w.word.toLowerCase(), w))
+    words.forEach(w => map.set(w.word.toLowerCase(), w))
     return map
-  }, [slot])
+  }, [words])
 
-  // Auto-play TTS when the displayed text changes (also fires on level change).
+  // Auto-play TTS when the displayed text changes. Skip if speech hasn't been
+  // unlocked yet — Android Chrome blocks autoplay until the first user gesture,
+  // and a silently-failing autoplay would suppress the manual 🔊 tap too.
   useEffect(() => {
+    if (!isSpeechUnlocked()) return
     const t = setTimeout(() => onSpeak(), 100)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slot.english])
+  }, [english])
 
-  const tokens = slot.english.split(/(\s+)/)
+  const tokens = english.split(/(\s+)/)
 
   return (
     <div className="flex flex-col gap-7">

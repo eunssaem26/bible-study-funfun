@@ -1,27 +1,15 @@
-export type Level = 'easy' | 'standard'
-
-export const LEVEL_LABELS: Record<Level, { kr: string; en: string }> = {
-  easy: { kr: '쉬움', en: 'Easy' },
-  standard: { kr: '보통', en: 'Standard' },
-}
-
 export type WordDef = {
   word: string
   meaning: string
-  pronunciation?: string
+  pronunciation: string
   example?: string
-}
-
-export type SentenceLevel = {
-  english: string
-  words: WordDef[]
 }
 
 export type Sentence = {
   korean: string
   reference: string
-  easy: SentenceLevel
-  standard?: SentenceLevel
+  english: string
+  words: WordDef[]
 }
 
 export type QuizQuestion = {
@@ -44,7 +32,7 @@ export type Lesson = {
   titleKr: string
   description: string
   estimatedMinutes: number
-  source: { easy: LessonSource; standard?: LessonSource }
+  source: LessonSource
   sentences: Sentence[]
   quiz: QuizQuestion[]
 }
@@ -113,24 +101,6 @@ export const stories: Story[] = [
   },
 ]
 
-/** Returns the sentence content for the given level, falling back to easy. */
-export function getSentenceLevel(s: Sentence, level: Level): SentenceLevel {
-  if (level === 'standard' && s.standard) return s.standard
-  return s.easy
-}
-
-/** Returns the source for the given level, falling back to easy. */
-export function getLessonSource(l: Lesson, level: Level): LessonSource {
-  if (level === 'standard' && l.source.standard) return l.source.standard
-  return l.source.easy
-}
-
-/** Whether a lesson supports a given level. */
-export function lessonSupportsLevel(l: Lesson, level: Level): boolean {
-  if (level === 'easy') return true
-  return !!l.source.standard && l.sentences.every(s => !!s.standard)
-}
-
 export const creationLesson1: Lesson = {
   id: 'creation-1',
   storyId: 'creation',
@@ -140,295 +110,358 @@ export const creationLesson1: Lesson = {
   description: '하나님이 세상을 만드신 첫 사흘. 빛이 생기고, 하늘이 펼쳐지고, 땅과 바다가 나뉘어요.',
   estimatedMinutes: 5,
   source: {
-    easy: {
-      label: 'Genesis 1:1–13, Bible in Basic English (BBE) — Public Domain',
-      url: 'https://ebible.org/bbe/GEN01.htm',
-    },
-    standard: {
-      label: 'Genesis 1:1–13, World English Bible (WEB) — Public Domain',
-      url: 'https://ebible.org/web/GEN01.htm',
-    },
+    label: 'Genesis 1:1–13, World English Bible (WEB) — Public Domain',
+    url: 'https://ebible.org/web/GEN01.htm',
   },
   sentences: [
     {
       korean: '맨 처음에 하나님이 하늘과 땅을 만드셨어요.',
       reference: 'Genesis 1:1',
-      easy: {
-        english: 'At the first God made the heaven and the earth.',
-        words: [
-          { word: 'first', meaning: '맨 처음, 시작', pronunciation: '/fɜːrst/', example: 'the first day — 첫째 날' },
-          { word: 'made', meaning: '만들었다 (make의 과거형)', pronunciation: '/meɪd/', example: 'I made it. — 내가 만들었어.' },
-          { word: 'heaven', meaning: '하늘, 천국', pronunciation: '/ˈhɛvən/' },
-          { word: 'earth', meaning: '땅, 지구', pronunciation: '/ɜːrθ/' },
-        ],
-      },
-      standard: {
-        english: 'In the beginning, God created the heavens and the earth.',
-        words: [
-          { word: 'beginning', meaning: '시작', pronunciation: '/bɪˈɡɪnɪŋ/', example: 'in the beginning — 처음에' },
-          { word: 'created', meaning: '창조했다, 만들었다', pronunciation: '/kriˈeɪtɪd/' },
-          { word: 'heavens', meaning: '하늘 (복수형, 시적 표현)', pronunciation: '/ˈhɛvənz/' },
-          { word: 'earth', meaning: '땅, 지구', pronunciation: '/ɜːrθ/' },
-        ],
-      },
+      english: 'In the beginning, God created the heavens and the earth.',
+      words: [
+        {
+          word: 'beginning',
+          meaning: '시작',
+          pronunciation: '/bɪˈɡɪnɪŋ/',
+          example: 'in the beginning — 처음에',
+        },
+        {
+          word: 'created',
+          meaning: '창조했다, 만들었다',
+          pronunciation: '/kriˈeɪtɪd/',
+        },
+        {
+          word: 'heavens',
+          meaning: '하늘 (복수형, 시적 표현)',
+          pronunciation: '/ˈhɛvənz/',
+        },
+        {
+          word: 'earth',
+          meaning: '땅, 지구',
+          pronunciation: '/ɜːrθ/',
+        },
+      ],
     },
     {
       korean: '땅은 텅 비고 모양도 없었어요. 깊은 물 위는 캄캄했어요.',
       reference: 'Genesis 1:2a',
-      easy: {
-        english: 'And the earth was waste and without form; and it was dark on the face of the deep.',
-        words: [
-          { word: 'waste', meaning: '텅 빈, 황량한', pronunciation: '/weɪst/' },
-          { word: 'form', meaning: '모양, 형태', pronunciation: '/fɔːrm/' },
-          { word: 'dark', meaning: '어두운, 캄캄한', pronunciation: '/dɑːrk/' },
-          { word: 'deep', meaning: '깊은 곳, 깊은 물', pronunciation: '/diːp/' },
-        ],
-      },
-      standard: {
-        english: 'The earth was formless and empty. Darkness was on the surface of the deep.',
-        words: [
-          { word: 'formless', meaning: '모양이 없는', pronunciation: '/ˈfɔːrmləs/' },
-          { word: 'empty', meaning: '비어 있는', pronunciation: '/ˈɛmpti/' },
-          { word: 'darkness', meaning: '어둠', pronunciation: '/ˈdɑːrknəs/' },
-          { word: 'surface', meaning: '표면, ~위', pronunciation: '/ˈsɜːrfəs/' },
-          { word: 'deep', meaning: '깊은 곳, 심해', pronunciation: '/diːp/' },
-        ],
-      },
+      english: 'The earth was formless and empty. Darkness was on the surface of the deep.',
+      words: [
+        {
+          word: 'formless',
+          meaning: '모양이 없는',
+          pronunciation: '/ˈfɔːrmləs/',
+        },
+        {
+          word: 'empty',
+          meaning: '비어 있는',
+          pronunciation: '/ˈɛmpti/',
+        },
+        {
+          word: 'darkness',
+          meaning: '어둠',
+          pronunciation: '/ˈdɑːrknəs/',
+        },
+        {
+          word: 'surface',
+          meaning: '표면, ~위',
+          pronunciation: '/ˈsɜːrfəs/',
+        },
+        {
+          word: 'deep',
+          meaning: '깊은 곳, 심해',
+          pronunciation: '/diːp/',
+        },
+      ],
     },
     {
       korean: '하나님의 영이 그 물 위를 움직이고 계셨어요.',
       reference: 'Genesis 1:2b',
-      easy: {
-        english: 'And the Spirit of God was moving on the face of the waters.',
-        words: [
-          { word: 'Spirit', meaning: '영, 영혼', pronunciation: '/ˈspɪrɪt/' },
-          { word: 'moving', meaning: '움직이는', pronunciation: '/ˈmuːvɪŋ/' },
-          { word: 'face', meaning: '표면, 얼굴', pronunciation: '/feɪs/' },
-          { word: 'waters', meaning: '물 (복수형)', pronunciation: '/ˈwɔːtərz/' },
-        ],
-      },
-      standard: {
-        english: "God's Spirit was hovering over the surface of the waters.",
-        words: [
-          { word: 'Spirit', meaning: '영, 영혼', pronunciation: '/ˈspɪrɪt/' },
-          { word: 'hovering', meaning: '맴도는, 떠다니는', pronunciation: '/ˈhʌvərɪŋ/' },
-          { word: 'surface', meaning: '표면', pronunciation: '/ˈsɜːrfəs/' },
-          { word: 'waters', meaning: '물 (복수형)', pronunciation: '/ˈwɔːtərz/' },
-        ],
-      },
+      english: "God's Spirit was hovering over the surface of the waters.",
+      words: [
+        {
+          word: 'Spirit',
+          meaning: '영, 영혼',
+          pronunciation: '/ˈspɪrɪt/',
+        },
+        {
+          word: 'hovering',
+          meaning: '맴도는, 떠다니는',
+          pronunciation: '/ˈhʌvərɪŋ/',
+        },
+        {
+          word: 'surface',
+          meaning: '표면',
+          pronunciation: '/ˈsɜːrfəs/',
+        },
+        {
+          word: 'waters',
+          meaning: '물 (복수형)',
+          pronunciation: '/ˈwɔːtərz/',
+        },
+      ],
     },
     {
       korean: '하나님이 "빛이 있으라" 하시니, 빛이 생겼어요.',
       reference: 'Genesis 1:3',
-      easy: {
-        english: 'And God said, Let there be light: and there was light.',
-        words: [
-          { word: 'said', meaning: '말했다 (say의 과거형)', pronunciation: '/sɛd/' },
-          { word: 'Let', meaning: '~하게 하라 (명령)', pronunciation: '/lɛt/', example: 'Let there be light. — 빛이 있으라.' },
-          { word: 'light', meaning: '빛', pronunciation: '/laɪt/' },
-        ],
-      },
-      standard: {
-        english: 'God said, "Let there be light," and there was light.',
-        words: [
-          { word: 'Let', meaning: '~하게 하라 (명령)', pronunciation: '/lɛt/', example: 'Let there be light. — 빛이 있으라.' },
-          { word: 'light', meaning: '빛', pronunciation: '/laɪt/' },
-        ],
-      },
+      english: 'God said, "Let there be light," and there was light.',
+      words: [
+        {
+          word: 'Let',
+          meaning: '~하게 하라 (명령)',
+          pronunciation: '/lɛt/',
+          example: 'Let there be light. — 빛이 있으라.',
+        },
+        {
+          word: 'light',
+          meaning: '빛',
+          pronunciation: '/laɪt/',
+        },
+      ],
     },
     {
       korean: '하나님이 빛을 보시고 "좋다"고 하셨어요. 그리고 빛과 어둠을 나누셨어요.',
       reference: 'Genesis 1:4',
-      easy: {
-        english: 'And God, looking on the light, saw that it was good: and God made a division between the light and the dark.',
-        words: [
-          { word: 'looking', meaning: '보고 있는', pronunciation: '/ˈlʊkɪŋ/' },
-          { word: 'saw', meaning: '보았다 (see의 과거형)', pronunciation: '/sɔː/' },
-          { word: 'good', meaning: '좋은', pronunciation: '/ɡʊd/' },
-          { word: 'division', meaning: '나눔, 구분', pronunciation: '/dɪˈvɪʒən/' },
-          { word: 'between', meaning: '~사이에', pronunciation: '/bɪˈtwiːn/' },
-        ],
-      },
-      standard: {
-        english: 'God saw the light, and saw that it was good. God divided the light from the darkness.',
-        words: [
-          { word: 'saw', meaning: '보았다 (see의 과거형)', pronunciation: '/sɔː/' },
-          { word: 'good', meaning: '좋은', pronunciation: '/ɡʊd/' },
-          { word: 'divided', meaning: '나누었다 (divide의 과거형)', pronunciation: '/dɪˈvaɪdɪd/' },
-          { word: 'darkness', meaning: '어둠', pronunciation: '/ˈdɑːrknəs/' },
-        ],
-      },
+      english: 'God saw the light, and saw that it was good. God divided the light from the darkness.',
+      words: [
+        {
+          word: 'saw',
+          meaning: '보았다 (see의 과거형)',
+          pronunciation: '/sɔː/',
+        },
+        {
+          word: 'good',
+          meaning: '좋은',
+          pronunciation: '/ɡʊd/',
+        },
+        {
+          word: 'divided',
+          meaning: '나누었다 (divide의 과거형)',
+          pronunciation: '/dɪˈvaɪdɪd/',
+        },
+        {
+          word: 'darkness',
+          meaning: '어둠',
+          pronunciation: '/ˈdɑːrknəs/',
+        },
+      ],
     },
     {
       korean: '하나님은 빛을 "낮", 어둠을 "밤"이라고 부르셨어요. 저녁이 되고 아침이 되니 — 첫째 날이었어요.',
       reference: 'Genesis 1:5',
-      easy: {
-        english: 'Naming the light, Day, and the dark, Night. And there was evening and there was morning, the first day.',
-        words: [
-          { word: 'Naming', meaning: '이름 지으며', pronunciation: '/ˈneɪmɪŋ/' },
-          { word: 'Day', meaning: '낮, 하루', pronunciation: '/deɪ/' },
-          { word: 'Night', meaning: '밤', pronunciation: '/naɪt/' },
-          { word: 'evening', meaning: '저녁', pronunciation: '/ˈiːvnɪŋ/' },
-          { word: 'morning', meaning: '아침', pronunciation: '/ˈmɔːrnɪŋ/' },
-        ],
-      },
-      standard: {
-        english: 'God called the light "day", and the darkness he called "night". There was evening and there was morning, the first day.',
-        words: [
-          { word: 'called', meaning: '불렀다, 이름 붙였다', pronunciation: '/kɔːld/' },
-          { word: 'darkness', meaning: '어둠', pronunciation: '/ˈdɑːrknəs/' },
-          { word: 'evening', meaning: '저녁', pronunciation: '/ˈiːvnɪŋ/' },
-          { word: 'morning', meaning: '아침', pronunciation: '/ˈmɔːrnɪŋ/' },
-        ],
-      },
+      english: 'God called the light "day", and the darkness he called "night". There was evening and there was morning, the first day.',
+      words: [
+        {
+          word: 'called',
+          meaning: '불렀다, 이름 붙였다',
+          pronunciation: '/kɔːld/',
+        },
+        {
+          word: 'darkness',
+          meaning: '어둠',
+          pronunciation: '/ˈdɑːrknəs/',
+        },
+        {
+          word: 'evening',
+          meaning: '저녁',
+          pronunciation: '/ˈiːvnɪŋ/',
+        },
+        {
+          word: 'morning',
+          meaning: '아침',
+          pronunciation: '/ˈmɔːrnɪŋ/',
+        },
+      ],
     },
     {
       korean: '하나님이 "물 위에 단단한 둥근 천장이 있어 물과 물을 나누어라" 하셨어요.',
       reference: 'Genesis 1:6',
-      easy: {
-        english: 'And God said, Let there be a solid arch stretching over the waters, parting the waters from the waters.',
-        words: [
-          { word: 'solid', meaning: '단단한', pronunciation: '/ˈsɒlɪd/' },
-          { word: 'arch', meaning: '아치, 둥근 천장', pronunciation: '/ɑːrtʃ/' },
-          { word: 'stretching', meaning: '뻗어있는', pronunciation: '/ˈstrɛtʃɪŋ/' },
-          { word: 'over', meaning: '~위에', pronunciation: '/ˈoʊvər/' },
-          { word: 'parting', meaning: '나누는', pronunciation: '/ˈpɑːrtɪŋ/' },
-        ],
-      },
-      standard: {
-        english: 'God said, "Let there be an expanse in the middle of the waters, and let it divide the waters from the waters."',
-        words: [
-          { word: 'expanse', meaning: '광활한 공간, (성경) 궁창', pronunciation: '/ɪkˈspæns/' },
-          { word: 'middle', meaning: '가운데', pronunciation: '/ˈmɪdl/' },
-          { word: 'divide', meaning: '나누다', pronunciation: '/dɪˈvaɪd/' },
-        ],
-      },
+      english: 'God said, "Let there be an expanse in the middle of the waters, and let it divide the waters from the waters."',
+      words: [
+        {
+          word: 'expanse',
+          meaning: '광활한 공간, (성경) 궁창',
+          pronunciation: '/ɪkˈspæns/',
+        },
+        {
+          word: 'middle',
+          meaning: '가운데',
+          pronunciation: '/ˈmɪdl/',
+        },
+        {
+          word: 'divide',
+          meaning: '나누다',
+          pronunciation: '/dɪˈvaɪd/',
+        },
+      ],
     },
     {
       korean: '하나님은 그 둥근 천장을 "하늘"이라 부르셨어요. 저녁이 되고 아침이 되니 — 둘째 날이었어요.',
       reference: 'Genesis 1:8',
-      easy: {
-        english: 'And God gave the arch the name of Heaven. And there was evening and there was morning, the second day.',
-        words: [
-          { word: 'gave', meaning: '주었다 (give의 과거형)', pronunciation: '/ɡeɪv/' },
-          { word: 'name', meaning: '이름', pronunciation: '/neɪm/' },
-          { word: 'second', meaning: '둘째, 두 번째', pronunciation: '/ˈsɛkənd/' },
-        ],
-      },
-      standard: {
-        english: 'God called the expanse "sky". There was evening and there was morning, a second day.',
-        words: [
-          { word: 'expanse', meaning: '광활한 공간, (성경) 궁창', pronunciation: '/ɪkˈspæns/' },
-          { word: 'sky', meaning: '하늘', pronunciation: '/skaɪ/' },
-          { word: 'second', meaning: '둘째, 두 번째', pronunciation: '/ˈsɛkənd/' },
-        ],
-      },
+      english: 'God called the expanse "sky". There was evening and there was morning, a second day.',
+      words: [
+        {
+          word: 'expanse',
+          meaning: '광활한 공간, (성경) 궁창',
+          pronunciation: '/ɪkˈspæns/',
+        },
+        {
+          word: 'sky',
+          meaning: '하늘',
+          pronunciation: '/skaɪ/',
+        },
+        {
+          word: 'second',
+          meaning: '둘째, 두 번째',
+          pronunciation: '/ˈsɛkənd/',
+        },
+      ],
     },
     {
       korean: '하나님이 "하늘 아래 물이 한 곳에 모이고, 마른 땅이 보이게 하라" 하셨어요. 그대로 되었어요.',
       reference: 'Genesis 1:9',
-      easy: {
-        english: 'And God said, Let the waters under the heaven come together in one place, and let the dry land be seen: and it was so.',
-        words: [
-          { word: 'under', meaning: '~아래에', pronunciation: '/ˈʌndər/' },
-          { word: 'together', meaning: '함께', pronunciation: '/təˈɡɛðər/' },
-          { word: 'place', meaning: '장소, 곳', pronunciation: '/pleɪs/' },
-          { word: 'dry', meaning: '마른, 건조한', pronunciation: '/draɪ/' },
-          { word: 'land', meaning: '땅, 육지', pronunciation: '/lænd/' },
-          { word: 'seen', meaning: '보이는 (see의 과거분사)', pronunciation: '/siːn/' },
-        ],
-      },
-      standard: {
-        english: 'God said, "Let the waters under the sky be gathered together to one place, and let the dry land appear," and it was so.',
-        words: [
-          { word: 'gathered', meaning: '모였다, 모은', pronunciation: '/ˈɡæðərd/' },
-          { word: 'together', meaning: '함께', pronunciation: '/təˈɡɛðər/' },
-          { word: 'dry', meaning: '마른', pronunciation: '/draɪ/' },
-          { word: 'appear', meaning: '나타나다', pronunciation: '/əˈpɪər/' },
-        ],
-      },
+      english: 'God said, "Let the waters under the sky be gathered together to one place, and let the dry land appear," and it was so.',
+      words: [
+        {
+          word: 'gathered',
+          meaning: '모였다, 모은',
+          pronunciation: '/ˈɡæðərd/',
+        },
+        {
+          word: 'together',
+          meaning: '함께',
+          pronunciation: '/təˈɡɛðər/',
+        },
+        {
+          word: 'dry',
+          meaning: '마른',
+          pronunciation: '/draɪ/',
+        },
+        {
+          word: 'appear',
+          meaning: '나타나다',
+          pronunciation: '/əˈpɪər/',
+        },
+      ],
     },
     {
       korean: '마른 땅은 "땅"이라 불렸고, 한 곳에 모인 물은 "바다"라 불렸어요. 하나님이 보시기에 좋았어요.',
       reference: 'Genesis 1:10',
-      easy: {
-        english: 'And the dry land was named, Earth; and the waters together in their place were named, Seas: and God saw that it was good.',
-        words: [
-          { word: 'named', meaning: '이름이 지어졌다', pronunciation: '/neɪmd/' },
-          { word: 'Seas', meaning: '바다 (복수형)', pronunciation: '/siːz/' },
-        ],
-      },
-      standard: {
-        english: 'God called the dry land "earth", and the gathering of the waters he called "seas". God saw that it was good.',
-        words: [
-          { word: 'called', meaning: '불렀다, 이름 붙였다', pronunciation: '/kɔːld/' },
-          { word: 'gathering', meaning: '모임, 모인 곳', pronunciation: '/ˈɡæðərɪŋ/' },
-          { word: 'seas', meaning: '바다 (복수형)', pronunciation: '/siːz/' },
-        ],
-      },
+      english: 'God called the dry land "earth", and the gathering of the waters he called "seas". God saw that it was good.',
+      words: [
+        {
+          word: 'called',
+          meaning: '불렀다, 이름 붙였다',
+          pronunciation: '/kɔːld/',
+        },
+        {
+          word: 'gathering',
+          meaning: '모임, 모인 곳',
+          pronunciation: '/ˈɡæðərɪŋ/',
+        },
+        {
+          word: 'seas',
+          meaning: '바다 (복수형)',
+          pronunciation: '/siːz/',
+        },
+      ],
     },
     {
       korean: '하나님이 "땅 위에 풀이 자라고, 씨를 맺는 식물과 열매를 맺는 나무가 자라라" 하셨어요.',
       reference: 'Genesis 1:11',
-      easy: {
-        english: 'And God said, Let grass come up on the earth, and plants producing seed, and fruit-trees giving fruit.',
-        words: [
-          { word: 'grass', meaning: '풀', pronunciation: '/ɡræs/' },
-          { word: 'plants', meaning: '식물들', pronunciation: '/plænts/' },
-          { word: 'producing', meaning: '만드는, 맺는', pronunciation: '/prəˈdjuːsɪŋ/' },
-          { word: 'seed', meaning: '씨앗', pronunciation: '/siːd/' },
-          { word: 'fruit', meaning: '열매, 과일', pronunciation: '/fruːt/' },
-          { word: 'trees', meaning: '나무들', pronunciation: '/triːz/' },
-        ],
-      },
-      standard: {
-        english: 'God said, "Let the earth yield grass, herbs yielding seeds, and fruit trees bearing fruit."',
-        words: [
-          { word: 'yield', meaning: '내다, 만들어내다', pronunciation: '/jiːld/' },
-          { word: 'grass', meaning: '풀', pronunciation: '/ɡræs/' },
-          { word: 'herbs', meaning: '식물들, 풀', pronunciation: '/ɜːrbz/' },
-          { word: 'yielding', meaning: '내는, 만들어내는', pronunciation: '/ˈjiːldɪŋ/' },
-          { word: 'seeds', meaning: '씨앗들', pronunciation: '/siːdz/' },
-          { word: 'bearing', meaning: '맺는, 가지고 있는', pronunciation: '/ˈbɛərɪŋ/' },
-          { word: 'fruit', meaning: '열매', pronunciation: '/fruːt/' },
-        ],
-      },
+      english: 'God said, "Let the earth yield grass, herbs yielding seeds, and fruit trees bearing fruit."',
+      words: [
+        {
+          word: 'yield',
+          meaning: '내다, 만들어내다',
+          pronunciation: '/jiːld/',
+        },
+        {
+          word: 'grass',
+          meaning: '풀',
+          pronunciation: '/ɡræs/',
+        },
+        {
+          word: 'herbs',
+          meaning: '식물들, 풀',
+          pronunciation: '/ɜːrbz/',
+        },
+        {
+          word: 'yielding',
+          meaning: '내는, 만들어내는',
+          pronunciation: '/ˈjiːldɪŋ/',
+        },
+        {
+          word: 'seeds',
+          meaning: '씨앗들',
+          pronunciation: '/siːdz/',
+        },
+        {
+          word: 'bearing',
+          meaning: '맺는, 가지고 있는',
+          pronunciation: '/ˈbɛərɪŋ/',
+        },
+        {
+          word: 'fruit',
+          meaning: '열매',
+          pronunciation: '/fruːt/',
+        },
+      ],
     },
     {
       korean: '저녁이 되고 아침이 되니 — 셋째 날이었어요.',
       reference: 'Genesis 1:13',
-      easy: {
-        english: 'And there was evening and there was morning, the third day.',
-        words: [
-          { word: 'third', meaning: '셋째, 세 번째', pronunciation: '/θɜːrd/' },
-        ],
-      },
-      standard: {
-        english: 'There was evening and there was morning, a third day.',
-        words: [
-          { word: 'evening', meaning: '저녁', pronunciation: '/ˈiːvnɪŋ/' },
-          { word: 'morning', meaning: '아침', pronunciation: '/ˈmɔːrnɪŋ/' },
-          { word: 'third', meaning: '셋째, 세 번째', pronunciation: '/θɜːrd/' },
-        ],
-      },
+      english: 'There was evening and there was morning, a third day.',
+      words: [
+        {
+          word: 'evening',
+          meaning: '저녁',
+          pronunciation: '/ˈiːvnɪŋ/',
+        },
+        {
+          word: 'morning',
+          meaning: '아침',
+          pronunciation: '/ˈmɔːrnɪŋ/',
+        },
+        {
+          word: 'third',
+          meaning: '셋째, 세 번째',
+          pronunciation: '/θɜːrd/',
+        },
+      ],
     },
   ],
   quiz: [
     {
       question: '하나님이 첫째 날에 만드신 것은 무엇일까요?',
-      options: ['빛 (light)', '바다 (seas)', '나무 (trees)', '하늘 (heaven)'],
+      options: [
+        '빛 (light)',
+        '바다 (seas)',
+        '나무 (trees)',
+        '하늘 (heaven)',
+      ],
       correctIndex: 0,
       explanation: 'Day 1: "Let there be light." — 빛이 있으라!',
     },
     {
       question: '본문에서 "둥근 천장 / 궁창"을 의미하는 단어는?',
-      options: ['arch / expanse', 'earth', 'fruit', 'seed'],
+      options: [
+        'arch / expanse',
+        'earth',
+        'fruit',
+        'seed',
+      ],
       correctIndex: 0,
       explanation: '쉬움(BBE)에서는 arch, 보통(WEB)에서는 expanse. 둘 다 하나님이 만드신 "하늘(sky / heaven)"을 가리켜요.',
     },
     {
       question: '셋째 날에 만들어지지 않은 것은?',
-      options: ['마른 땅 (dry land)', '바다 (seas)', '풀과 나무 (grass and trees)', '해와 달 (sun and moon)'],
+      options: [
+        '마른 땅 (dry land)',
+        '바다 (seas)',
+        '풀과 나무 (grass and trees)',
+        '해와 달 (sun and moon)',
+      ],
       correctIndex: 3,
       explanation: '해와 달은 넷째 날에 만드셨어요 — 다음 lesson에서 만나요!',
     },
@@ -444,311 +477,364 @@ export const davidLesson1: Lesson = {
   description: '이스라엘과 블레셋의 전쟁터. 거인 골리앗이 매일 외친다. 어린 양치기 소년 다윗이 그 앞에 선다.',
   estimatedMinutes: 5,
   source: {
-    easy: {
-      label: '1 Samuel 17, Bible in Basic English (BBE) — Public Domain',
-      url: 'https://ebible.org/bbe/1SA17.htm',
-    },
-    standard: {
-      label: '1 Samuel 17, World English Bible (WEB) — Public Domain',
-      url: 'https://ebible.org/web/1SA17.htm',
-    },
+    label: '1 Samuel 17, World English Bible (WEB) — Public Domain',
+    url: 'https://ebible.org/web/1SA17.htm',
   },
   sentences: [
     {
       korean: '이스라엘과 블레셋이 전쟁 중이었어요.',
       reference: '1 Samuel 17:1',
-      easy: {
-        english: 'There was a war between Israel and the Philistines.',
-        words: [
-          { word: 'war', meaning: '전쟁', pronunciation: '/wɔːr/' },
-          { word: 'between', meaning: '~사이에', pronunciation: '/bɪˈtwiːn/' },
-          { word: 'Philistines', meaning: '블레셋 사람들', pronunciation: '/ˈfɪlɪˌstaɪnz/' },
-        ],
-      },
-      standard: {
-        english: 'Israel and the Philistines were gathered for battle.',
-        words: [
-          { word: 'gathered', meaning: '모였다, 모인', pronunciation: '/ˈɡæðərd/' },
-          { word: 'battle', meaning: '전투', pronunciation: '/ˈbætl/' },
-          { word: 'Philistines', meaning: '블레셋 사람들', pronunciation: '/ˈfɪlɪˌstaɪnz/' },
-        ],
-      },
+      english: 'Israel and the Philistines were gathered for battle.',
+      words: [
+        {
+          word: 'gathered',
+          meaning: '모였다, 모인',
+          pronunciation: '/ˈɡæðərd/',
+        },
+        {
+          word: 'battle',
+          meaning: '전투',
+          pronunciation: '/ˈbætl/',
+        },
+        {
+          word: 'Philistines',
+          meaning: '블레셋 사람들',
+          pronunciation: '/ˈfɪlɪˌstaɪnz/',
+        },
+      ],
     },
     {
       korean: '블레셋 진영에서 골리앗이라는 거인이 나왔어요. 키가 아주 크고 아주 강했어요.',
       reference: '1 Samuel 17:4',
-      easy: {
-        english: 'From the Philistines came a giant named Goliath, very tall and very strong.',
-        words: [
-          { word: 'giant', meaning: '거인', pronunciation: '/ˈdʒaɪənt/' },
-          { word: 'named', meaning: '~라는 이름의', pronunciation: '/neɪmd/' },
-          { word: 'tall', meaning: '키가 큰', pronunciation: '/tɔːl/' },
-          { word: 'strong', meaning: '강한, 힘센', pronunciation: '/strɔːŋ/' },
-        ],
-      },
-      standard: {
-        english: 'A champion came out from the camp of the Philistines, named Goliath. He was tall and powerful.',
-        words: [
-          { word: 'champion', meaning: '대표 전사, 챔피언', pronunciation: '/ˈtʃæmpiən/' },
-          { word: 'camp', meaning: '진영, 야영지', pronunciation: '/kæmp/' },
-          { word: 'tall', meaning: '키가 큰', pronunciation: '/tɔːl/' },
-          { word: 'powerful', meaning: '힘센, 강력한', pronunciation: '/ˈpaʊərfəl/' },
-        ],
-      },
+      english: 'A champion came out from the camp of the Philistines, named Goliath. He was tall and powerful.',
+      words: [
+        {
+          word: 'champion',
+          meaning: '대표 전사, 챔피언',
+          pronunciation: '/ˈtʃæmpiən/',
+        },
+        {
+          word: 'camp',
+          meaning: '진영, 야영지',
+          pronunciation: '/kæmp/',
+        },
+        {
+          word: 'tall',
+          meaning: '키가 큰',
+          pronunciation: '/tɔːl/',
+        },
+        {
+          word: 'powerful',
+          meaning: '힘센, 강력한',
+          pronunciation: '/ˈpaʊərfəl/',
+        },
+      ],
     },
     {
       korean: '매일 골리앗은 이스라엘 군대를 향해 외쳤어요. "나와 싸울 사람을 보내라!"',
       reference: '1 Samuel 17:8–10',
-      easy: {
-        english: 'Every day, Goliath shouted at the army of Israel: "Send a man to fight me!"',
-        words: [
-          { word: 'every', meaning: '매~, 모든', pronunciation: '/ˈɛvri/', example: 'every day — 매일' },
-          { word: 'shouted', meaning: '소리쳤다 (shout의 과거형)', pronunciation: '/ˈʃaʊtɪd/' },
-          { word: 'army', meaning: '군대', pronunciation: '/ˈɑːrmi/' },
-          { word: 'send', meaning: '보내다', pronunciation: '/sɛnd/' },
-          { word: 'fight', meaning: '싸우다', pronunciation: '/faɪt/' },
-        ],
-      },
-      standard: {
-        english: 'Each day Goliath challenged the armies of Israel, shouting, "Choose a man to fight me!"',
-        words: [
-          { word: 'each', meaning: '각각의', pronunciation: '/iːtʃ/' },
-          { word: 'challenged', meaning: '도전했다 (challenge의 과거형)', pronunciation: '/ˈtʃælɪndʒd/' },
-          { word: 'armies', meaning: '군대들', pronunciation: '/ˈɑːrmiz/' },
-          { word: 'choose', meaning: '고르다, 선택하다', pronunciation: '/tʃuːz/' },
-          { word: 'fight', meaning: '싸우다', pronunciation: '/faɪt/' },
-        ],
-      },
+      english: 'Each day Goliath challenged the armies of Israel, shouting, "Choose a man to fight me!"',
+      words: [
+        {
+          word: 'each',
+          meaning: '각각의',
+          pronunciation: '/iːtʃ/',
+        },
+        {
+          word: 'challenged',
+          meaning: '도전했다 (challenge의 과거형)',
+          pronunciation: '/ˈtʃælɪndʒd/',
+        },
+        {
+          word: 'armies',
+          meaning: '군대들',
+          pronunciation: '/ˈɑːrmiz/',
+        },
+        {
+          word: 'choose',
+          meaning: '고르다, 선택하다',
+          pronunciation: '/tʃuːz/',
+        },
+        {
+          word: 'fight',
+          meaning: '싸우다',
+          pronunciation: '/faɪt/',
+        },
+      ],
     },
     {
       korean: '이스라엘 사람들은 그 말을 듣고 두려움에 떨었어요.',
       reference: '1 Samuel 17:11',
-      easy: {
-        english: 'The men of Israel heard him and were full of fear.',
-        words: [
-          { word: 'heard', meaning: '들었다 (hear의 과거형)', pronunciation: '/hɜːrd/' },
-          { word: 'full', meaning: '가득 찬', pronunciation: '/fʊl/', example: 'full of fear — 두려움으로 가득 찬' },
-          { word: 'fear', meaning: '두려움, 공포', pronunciation: '/fɪər/' },
-        ],
-      },
-      standard: {
-        english: 'When the men of Israel heard him, they were dismayed and greatly afraid.',
-        words: [
-          { word: 'heard', meaning: '들었다 (hear의 과거형)', pronunciation: '/hɜːrd/' },
-          { word: 'dismayed', meaning: '당황한, 낙담한', pronunciation: '/dɪsˈmeɪd/' },
-          { word: 'greatly', meaning: '크게, 매우', pronunciation: '/ˈɡreɪtli/' },
-          { word: 'afraid', meaning: '두려워하는', pronunciation: '/əˈfreɪd/' },
-        ],
-      },
+      english: 'When the men of Israel heard him, they were dismayed and greatly afraid.',
+      words: [
+        {
+          word: 'heard',
+          meaning: '들었다 (hear의 과거형)',
+          pronunciation: '/hɜːrd/',
+        },
+        {
+          word: 'dismayed',
+          meaning: '당황한, 낙담한',
+          pronunciation: '/dɪsˈmeɪd/',
+        },
+        {
+          word: 'greatly',
+          meaning: '크게, 매우',
+          pronunciation: '/ˈɡreɪtli/',
+        },
+        {
+          word: 'afraid',
+          meaning: '두려워하는',
+          pronunciation: '/əˈfreɪd/',
+        },
+      ],
     },
     {
       korean: '다윗은 어린 양치기 소년이었고, 집안의 막내였어요.',
       reference: '1 Samuel 17:14',
-      easy: {
-        english: 'David was a young shepherd boy, the youngest son in his family.',
-        words: [
-          { word: 'young', meaning: '어린, 젊은', pronunciation: '/jʌŋ/' },
-          { word: 'shepherd', meaning: '양치기, 목자', pronunciation: '/ˈʃɛpərd/' },
-          { word: 'youngest', meaning: '가장 어린, 막내', pronunciation: '/ˈjʌŋɡəst/' },
-          { word: 'family', meaning: '가족', pronunciation: '/ˈfæməli/' },
-        ],
-      },
-      standard: {
-        english: "David was the youngest of eight brothers, and he kept his father's sheep.",
-        words: [
-          { word: 'youngest', meaning: '가장 어린, 막내', pronunciation: '/ˈjʌŋɡəst/' },
-          { word: 'eight', meaning: '여덟', pronunciation: '/eɪt/' },
-          { word: 'kept', meaning: '돌보았다 (keep의 과거형)', pronunciation: '/kɛpt/' },
-          { word: 'sheep', meaning: '양', pronunciation: '/ʃiːp/' },
-        ],
-      },
+      english: "David was the youngest of eight brothers, and he kept his father's sheep.",
+      words: [
+        {
+          word: 'youngest',
+          meaning: '가장 어린, 막내',
+          pronunciation: '/ˈjʌŋɡəst/',
+        },
+        {
+          word: 'eight',
+          meaning: '여덟',
+          pronunciation: '/eɪt/',
+        },
+        {
+          word: 'kept',
+          meaning: '돌보았다 (keep의 과거형)',
+          pronunciation: '/kɛpt/',
+        },
+        {
+          word: 'sheep',
+          meaning: '양',
+          pronunciation: '/ʃiːp/',
+        },
+      ],
     },
     {
       korean: '다윗의 형 셋은 군인으로 군대에 있었어요.',
       reference: '1 Samuel 17:13',
-      easy: {
-        english: 'His three older brothers were soldiers in the army.',
-        words: [
-          { word: 'older', meaning: '더 나이 많은', pronunciation: '/ˈoʊldər/' },
-          { word: 'brothers', meaning: '형, 형제들', pronunciation: '/ˈbrʌðərz/' },
-          { word: 'soldiers', meaning: '군인들', pronunciation: '/ˈsoʊldʒərz/' },
-        ],
-      },
-      standard: {
-        english: 'His three eldest brothers had followed Saul to the battle.',
-        words: [
-          { word: 'eldest', meaning: '가장 나이 많은', pronunciation: '/ˈɛldəst/' },
-          { word: 'followed', meaning: '따라갔다 (follow의 과거형)', pronunciation: '/ˈfɒloʊd/' },
-          { word: 'battle', meaning: '전투', pronunciation: '/ˈbætl/' },
-        ],
-      },
+      english: 'His three eldest brothers had followed Saul to the battle.',
+      words: [
+        {
+          word: 'eldest',
+          meaning: '가장 나이 많은',
+          pronunciation: '/ˈɛldəst/',
+        },
+        {
+          word: 'followed',
+          meaning: '따라갔다 (follow의 과거형)',
+          pronunciation: '/ˈfɒloʊd/',
+        },
+        {
+          word: 'battle',
+          meaning: '전투',
+          pronunciation: '/ˈbætl/',
+        },
+      ],
     },
     {
       korean: '어느 날 다윗의 아버지가 말했어요. "이 빵을 진영에 있는 형들에게 가져다주렴."',
       reference: '1 Samuel 17:17',
-      easy: {
-        english: 'One day, David\'s father said, "Take this bread to your brothers in the camp."',
-        words: [
-          { word: 'father', meaning: '아버지', pronunciation: '/ˈfɑːðər/' },
-          { word: 'take', meaning: '가져가다', pronunciation: '/teɪk/' },
-          { word: 'bread', meaning: '빵', pronunciation: '/brɛd/' },
-          { word: 'camp', meaning: '진영, 캠프', pronunciation: '/kæmp/' },
-        ],
-      },
-      standard: {
-        english: 'Jesse said to his son David, "Carry this bread quickly to your brothers at the camp."',
-        words: [
-          { word: 'Jesse', meaning: '이새 (다윗의 아버지 이름)', pronunciation: '/ˈdʒɛsi/' },
-          { word: 'carry', meaning: '가지고 가다, 운반하다', pronunciation: '/ˈkæri/' },
-          { word: 'quickly', meaning: '빨리', pronunciation: '/ˈkwɪkli/' },
-          { word: 'camp', meaning: '진영', pronunciation: '/kæmp/' },
-        ],
-      },
+      english: 'Jesse said to his son David, "Carry this bread quickly to your brothers at the camp."',
+      words: [
+        {
+          word: 'Jesse',
+          meaning: '이새 (다윗의 아버지 이름)',
+          pronunciation: '/ˈdʒɛsi/',
+        },
+        {
+          word: 'carry',
+          meaning: '가지고 가다, 운반하다',
+          pronunciation: '/ˈkæri/',
+        },
+        {
+          word: 'quickly',
+          meaning: '빨리',
+          pronunciation: '/ˈkwɪkli/',
+        },
+        {
+          word: 'camp',
+          meaning: '진영',
+          pronunciation: '/kæmp/',
+        },
+      ],
     },
     {
       korean: '다윗이 진영에 도착했을 때, 골리앗이 외치는 소리를 듣고 이스라엘 사람들이 두려워서 도망가는 모습을 보았어요.',
       reference: '1 Samuel 17:23–24',
-      easy: {
-        english: 'When David came to the camp, he heard Goliath shouting and saw the men of Israel running away in fear.',
-        words: [
-          { word: 'came', meaning: '왔다, 도착했다 (come의 과거형)', pronunciation: '/keɪm/' },
-          { word: 'shouting', meaning: '소리치는, 외치는', pronunciation: '/ˈʃaʊtɪŋ/' },
-          { word: 'running', meaning: '달리는', pronunciation: '/ˈrʌnɪŋ/' },
-          { word: 'away', meaning: '멀리, 떨어져', pronunciation: '/əˈweɪ/' },
-        ],
-      },
-      standard: {
-        english: "When David arrived at the camp, he heard the giant's challenge and saw the men of Israel flee in terror.",
-        words: [
-          { word: 'arrived', meaning: '도착했다 (arrive의 과거형)', pronunciation: '/əˈraɪvd/' },
-          { word: 'challenge', meaning: '도전, 도발', pronunciation: '/ˈtʃælɪndʒ/' },
-          { word: 'flee', meaning: '도망치다', pronunciation: '/fliː/' },
-          { word: 'terror', meaning: '극심한 공포', pronunciation: '/ˈtɛrər/' },
-        ],
-      },
+      english: "When David arrived at the camp, he heard the giant's challenge and saw the men of Israel flee in terror.",
+      words: [
+        {
+          word: 'arrived',
+          meaning: '도착했다 (arrive의 과거형)',
+          pronunciation: '/əˈraɪvd/',
+        },
+        {
+          word: 'challenge',
+          meaning: '도전, 도발',
+          pronunciation: '/ˈtʃælɪndʒ/',
+        },
+        {
+          word: 'flee',
+          meaning: '도망치다',
+          pronunciation: '/fliː/',
+        },
+        {
+          word: 'terror',
+          meaning: '극심한 공포',
+          pronunciation: '/ˈtɛrər/',
+        },
+      ],
     },
     {
       korean: '다윗이 말했어요. "이스라엘의 하나님께 함부로 말하는 이 사람은 누구입니까?"',
       reference: '1 Samuel 17:26',
-      easy: {
-        english: 'David said, "Who is this man who speaks against the God of Israel?"',
-        words: [
-          { word: 'who', meaning: '누구', pronunciation: '/huː/' },
-          { word: 'speaks', meaning: '말한다', pronunciation: '/spiːks/' },
-          { word: 'against', meaning: '~에 맞서, 반대하여', pronunciation: '/əˈɡɛnst/' },
-        ],
-      },
-      standard: {
-        english: 'David asked, "Who is this man who defies the armies of the living God?"',
-        words: [
-          { word: 'asked', meaning: '물었다 (ask의 과거형)', pronunciation: '/æskt/' },
-          { word: 'defies', meaning: '맞선다, 거역한다', pronunciation: '/dɪˈfaɪz/' },
-          { word: 'armies', meaning: '군대들', pronunciation: '/ˈɑːrmiz/' },
-          { word: 'living', meaning: '살아 계신, 살아있는', pronunciation: '/ˈlɪvɪŋ/' },
-        ],
-      },
+      english: 'David asked, "Who is this man who defies the armies of the living God?"',
+      words: [
+        {
+          word: 'asked',
+          meaning: '물었다 (ask의 과거형)',
+          pronunciation: '/æskt/',
+        },
+        {
+          word: 'defies',
+          meaning: '맞선다, 거역한다',
+          pronunciation: '/dɪˈfaɪz/',
+        },
+        {
+          word: 'armies',
+          meaning: '군대들',
+          pronunciation: '/ˈɑːrmiz/',
+        },
+        {
+          word: 'living',
+          meaning: '살아 계신, 살아있는',
+          pronunciation: '/ˈlɪvɪŋ/',
+        },
+      ],
     },
     {
       korean: '사울 왕이 다윗에 대한 이야기를 듣고 그를 불렀어요.',
       reference: '1 Samuel 17:31',
-      easy: {
-        english: 'King Saul heard about David and called for him.',
-        words: [
-          { word: 'King', meaning: '왕', pronunciation: '/kɪŋ/' },
-          { word: 'called', meaning: '불렀다 (call의 과거형)', pronunciation: '/kɔːld/' },
-        ],
-      },
-      standard: {
-        english: 'When King Saul was told what David had said, he sent for him.',
-        words: [
-          { word: 'told', meaning: '말해졌다 (tell의 과거 수동형)', pronunciation: '/toʊld/' },
-          { word: 'sent', meaning: '보냈다 (send의 과거형)', pronunciation: '/sɛnt/', example: 'sent for him — 그를 부르러 사람을 보냈다' },
-        ],
-      },
+      english: 'When King Saul was told what David had said, he sent for him.',
+      words: [
+        {
+          word: 'told',
+          meaning: '말해졌다 (tell의 과거 수동형)',
+          pronunciation: '/toʊld/',
+        },
+        {
+          word: 'sent',
+          meaning: '보냈다 (send의 과거형)',
+          pronunciation: '/sɛnt/',
+          example: 'sent for him — 그를 부르러 사람을 보냈다',
+        },
+      ],
     },
     {
       korean: '다윗이 왕에게 말했어요. "두려워하지 마세요. 제가 가서 그와 싸우겠습니다."',
       reference: '1 Samuel 17:32',
-      easy: {
-        english: 'David said to the king, "Don\'t be afraid. I will go and fight him."',
-        words: [
-          { word: 'afraid', meaning: '두려워하는', pronunciation: '/əˈfreɪd/' },
-          { word: 'will', meaning: '~할 것이다 (미래)', pronunciation: '/wɪl/' },
-        ],
-      },
-      standard: {
-        english: 'David said to Saul, "Let no one\'s heart fail. Your servant will go and fight this Philistine."',
-        words: [
-          { word: 'heart', meaning: '마음, 심장', pronunciation: '/hɑːrt/' },
-          { word: 'fail', meaning: '약해지다, 실패하다', pronunciation: '/feɪl/', example: 'heart fail — 마음이 무너지다' },
-          { word: 'servant', meaning: '종, 하인', pronunciation: '/ˈsɜːrvənt/' },
-        ],
-      },
+      english: "David said to Saul, \"Let no one's heart fail. Your servant will go and fight this Philistine.\"",
+      words: [
+        {
+          word: 'heart',
+          meaning: '마음, 심장',
+          pronunciation: '/hɑːrt/',
+        },
+        {
+          word: 'fail',
+          meaning: '약해지다, 실패하다',
+          pronunciation: '/feɪl/',
+          example: 'heart fail — 마음이 무너지다',
+        },
+        {
+          word: 'servant',
+          meaning: '종, 하인',
+          pronunciation: '/ˈsɜːrvənt/',
+        },
+      ],
     },
     {
       korean: '사울이 말했어요. "너는 아직 어린 소년이다. 그는 오랜 세월 전쟁한 사람이다."',
       reference: '1 Samuel 17:33',
-      easy: {
-        english: 'Saul said, "You are only a boy. He has been a man of war for many years."',
-        words: [
-          { word: 'only', meaning: '오직, 단지', pronunciation: '/ˈoʊnli/' },
-          { word: 'boy', meaning: '소년', pronunciation: '/bɔɪ/' },
-          { word: 'years', meaning: '년, 해 (복수)', pronunciation: '/jɪərz/' },
-        ],
-      },
-      standard: {
-        english: 'Saul said, "You can\'t go to fight him. You are just a boy, and he has been a warrior since his youth."',
-        words: [
-          { word: 'just', meaning: '단지, 그저', pronunciation: '/dʒʌst/' },
-          { word: 'warrior', meaning: '전사', pronunciation: '/ˈwɔːriər/' },
-          { word: 'since', meaning: '~부터, 이후로', pronunciation: '/sɪns/' },
-          { word: 'youth', meaning: '젊은 시절, 청년기', pronunciation: '/juːθ/' },
-        ],
-      },
+      english: "Saul said, \"You can't go to fight him. You are just a boy, and he has been a warrior since his youth.\"",
+      words: [
+        {
+          word: 'just',
+          meaning: '단지, 그저',
+          pronunciation: '/dʒʌst/',
+        },
+        {
+          word: 'warrior',
+          meaning: '전사',
+          pronunciation: '/ˈwɔːriər/',
+        },
+        {
+          word: 'since',
+          meaning: '~부터, 이후로',
+          pronunciation: '/sɪns/',
+        },
+        {
+          word: 'youth',
+          meaning: '젊은 시절, 청년기',
+          pronunciation: '/juːθ/',
+        },
+      ],
     },
     {
       korean: '다윗이 말했어요. "사자가 양 떼에서 양 한 마리를 물어갔을 때, 제가 그 사자를 죽였어요. 하나님이 이 거인에게서도 저를 구해주실 거예요."',
       reference: '1 Samuel 17:34–37',
-      easy: {
-        english: 'David said, "When a lion took a sheep from my flock, I killed the lion. God will save me from this giant, too."',
-        words: [
-          { word: 'lion', meaning: '사자', pronunciation: '/ˈlaɪən/' },
-          { word: 'sheep', meaning: '양', pronunciation: '/ʃiːp/' },
-          { word: 'flock', meaning: '양 떼, 무리', pronunciation: '/flɒk/' },
-          { word: 'killed', meaning: '죽였다 (kill의 과거형)', pronunciation: '/kɪld/' },
-          { word: 'save', meaning: '구하다, 살리다', pronunciation: '/seɪv/' },
-        ],
-      },
-      standard: {
-        english: 'David replied, "When a lion took a lamb from the flock, I struck it down and killed it. The Lord who saved me from the lion will save me from this Philistine."',
-        words: [
-          { word: 'replied', meaning: '대답했다 (reply의 과거형)', pronunciation: '/rɪˈplaɪd/' },
-          { word: 'lamb', meaning: '어린 양', pronunciation: '/læm/' },
-          { word: 'flock', meaning: '양 떼', pronunciation: '/flɒk/' },
-          { word: 'struck', meaning: '쳤다, 때렸다 (strike의 과거형)', pronunciation: '/strʌk/' },
-          { word: 'Lord', meaning: '주, 여호와', pronunciation: '/lɔːrd/' },
-        ],
-      },
+      english: 'David replied, "When a lion took a lamb from the flock, I struck it down and killed it. The Lord who saved me from the lion will save me from this Philistine."',
+      words: [
+        {
+          word: 'replied',
+          meaning: '대답했다 (reply의 과거형)',
+          pronunciation: '/rɪˈplaɪd/',
+        },
+        {
+          word: 'lamb',
+          meaning: '어린 양',
+          pronunciation: '/læm/',
+        },
+        {
+          word: 'flock',
+          meaning: '양 떼',
+          pronunciation: '/flɒk/',
+        },
+        {
+          word: 'struck',
+          meaning: '쳤다, 때렸다 (strike의 과거형)',
+          pronunciation: '/strʌk/',
+        },
+        {
+          word: 'Lord',
+          meaning: '주, 여호와',
+          pronunciation: '/lɔːrd/',
+        },
+      ],
     },
     {
       korean: '그래서 사울이 말했어요. "가거라. 하나님이 너와 함께 하시기를."',
       reference: '1 Samuel 17:37',
-      easy: {
-        english: 'So Saul said, "Go, and may God be with you."',
-        words: [
-          { word: 'so', meaning: '그래서', pronunciation: '/soʊ/' },
-          { word: 'go', meaning: '가다', pronunciation: '/ɡoʊ/' },
-          { word: 'may', meaning: '~하시기를 (소망)', pronunciation: '/meɪ/', example: 'May God be with you. — 하나님이 너와 함께 하시기를.' },
-          { word: 'with', meaning: '함께', pronunciation: '/wɪð/' },
-        ],
-      },
-      standard: {
-        english: 'Saul said, "Go, and may the Lord be with you."',
-        words: [
-          { word: 'Lord', meaning: '주, 여호와', pronunciation: '/lɔːrd/' },
-          { word: 'may', meaning: '~하시기를 (소망)', pronunciation: '/meɪ/' },
-        ],
-      },
+      english: 'Saul said, "Go, and may the Lord be with you."',
+      words: [
+        {
+          word: 'Lord',
+          meaning: '주, 여호와',
+          pronunciation: '/lɔːrd/',
+        },
+        {
+          word: 'may',
+          meaning: '~하시기를 (소망)',
+          pronunciation: '/meɪ/',
+        },
+      ],
     },
   ],
   quiz: [
@@ -765,7 +851,12 @@ export const davidLesson1: Lesson = {
     },
     {
       question: '본문에서 "두려움"을 의미하는 단어는?',
-      options: ['fear', 'shepherd', 'giant', 'camp'],
+      options: [
+        'fear',
+        'shepherd',
+        'giant',
+        'camp',
+      ],
       correctIndex: 0,
       explanation: 'fear는 "두려움". 보통(WEB)에서는 "terror"(극심한 공포)도 함께 쓰여요.',
     },
@@ -792,296 +883,307 @@ export const davidLesson2: Lesson = {
   description: '갑옷을 벗고, 시냇가 돌 다섯 개와 물매 하나로 거인 앞에 선 다윗. 결정적 한 방.',
   estimatedMinutes: 5,
   source: {
-    easy: {
-      label: '1 Samuel 17:38–52, Bible in Basic English (BBE) — Public Domain',
-      url: 'https://ebible.org/bbe/1SA17.htm',
-    },
-    standard: {
-      label: '1 Samuel 17:38–52, World English Bible (WEB) — Public Domain',
-      url: 'https://ebible.org/web/1SA17.htm',
-    },
+    label: '1 Samuel 17:38–52, World English Bible (WEB) — Public Domain',
+    url: 'https://ebible.org/web/1SA17.htm',
   },
   sentences: [
     {
       korean: '사울이 다윗에게 자기 갑옷과 칼을 주었어요.',
       reference: '1 Samuel 17:38',
-      easy: {
-        english: 'Saul gave David his own armor and a sword.',
-        words: [
-          { word: 'gave', meaning: '주었다 (give의 과거형)', pronunciation: '/ɡeɪv/' },
-          { word: 'own', meaning: '자기 자신의', pronunciation: '/oʊn/' },
-          { word: 'armor', meaning: '갑옷', pronunciation: '/ˈɑːrmər/' },
-          { word: 'sword', meaning: '칼, 검', pronunciation: '/sɔːrd/' },
-        ],
-      },
-      standard: {
-        english: 'Saul clothed David with his own armor and a bronze helmet, with a sword over the armor.',
-        words: [
-          { word: 'clothed', meaning: '입혔다 (clothe의 과거형)', pronunciation: '/kloʊðd/' },
-          { word: 'armor', meaning: '갑옷', pronunciation: '/ˈɑːrmər/' },
-          { word: 'bronze', meaning: '청동', pronunciation: '/brɒnz/' },
-          { word: 'helmet', meaning: '투구, 헬멧', pronunciation: '/ˈhɛlmɪt/' },
-          { word: 'sword', meaning: '칼, 검', pronunciation: '/sɔːrd/' },
-        ],
-      },
+      english: 'Saul clothed David with his own armor and a bronze helmet, with a sword over the armor.',
+      words: [
+        {
+          word: 'clothed',
+          meaning: '입혔다 (clothe의 과거형)',
+          pronunciation: '/kloʊðd/',
+        },
+        {
+          word: 'armor',
+          meaning: '갑옷',
+          pronunciation: '/ˈɑːrmər/',
+        },
+        {
+          word: 'bronze',
+          meaning: '청동',
+          pronunciation: '/brɒnz/',
+        },
+        {
+          word: 'helmet',
+          meaning: '투구, 헬멧',
+          pronunciation: '/ˈhɛlmɪt/',
+        },
+        {
+          word: 'sword',
+          meaning: '칼, 검',
+          pronunciation: '/sɔːrd/',
+        },
+      ],
     },
     {
       korean: '하지만 다윗은 무거운 갑옷을 입고 걸을 수 없었어요. 한 번도 입어본 적이 없었거든요.',
       reference: '1 Samuel 17:39',
-      easy: {
-        english: 'But David could not walk in the heavy armor. He had not used it before.',
-        words: [
-          { word: 'could', meaning: '~할 수 있었다 (can의 과거형)', pronunciation: '/kʊd/' },
-          { word: 'walk', meaning: '걷다', pronunciation: '/wɔːk/' },
-          { word: 'heavy', meaning: '무거운', pronunciation: '/ˈhɛvi/' },
-          { word: 'before', meaning: '전에, 이전에', pronunciation: '/bɪˈfɔːr/' },
-        ],
-      },
-      standard: {
-        english: 'David tried to walk, but he could not, for he had not tested it.',
-        words: [
-          { word: 'tried', meaning: '시도했다 (try의 과거형)', pronunciation: '/traɪd/' },
-          { word: 'tested', meaning: '시험해봤다 (test의 과거형)', pronunciation: '/ˈtɛstɪd/' },
-        ],
-      },
+      english: 'David tried to walk, but he could not, for he had not tested it.',
+      words: [
+        {
+          word: 'tried',
+          meaning: '시도했다 (try의 과거형)',
+          pronunciation: '/traɪd/',
+        },
+        {
+          word: 'tested',
+          meaning: '시험해봤다 (test의 과거형)',
+          pronunciation: '/ˈtɛstɪd/',
+        },
+      ],
     },
     {
       korean: '그래서 다윗은 갑옷을 벗고, 본래 모습 그대로 — 막대기를 든 양치기 소년으로 나갔어요.',
       reference: '1 Samuel 17:39–40',
-      easy: {
-        english: 'So David took it off and went out as he was — a shepherd boy with a stick.',
-        words: [
-          { word: 'took off', meaning: '벗었다', pronunciation: '/tʊk ɔːf/' },
-          { word: 'stick', meaning: '막대기', pronunciation: '/stɪk/' },
-        ],
-      },
-      standard: {
-        english: 'David took it all off and went as he was — a shepherd boy with his staff.',
-        words: [
-          { word: 'staff', meaning: '지팡이, 막대', pronunciation: '/stæf/' },
-        ],
-      },
+      english: 'David took it all off and went as he was — a shepherd boy with his staff.',
+      words: [
+        {
+          word: 'staff',
+          meaning: '지팡이, 막대',
+          pronunciation: '/stæf/',
+        },
+      ],
     },
     {
       korean: '다윗은 시냇가로 내려가 매끄러운 돌 다섯 개를 골랐어요.',
       reference: '1 Samuel 17:40',
-      easy: {
-        english: 'He went down to the river and picked up five smooth stones.',
-        words: [
-          { word: 'down', meaning: '아래로', pronunciation: '/daʊn/' },
-          { word: 'river', meaning: '강, 시냇물', pronunciation: '/ˈrɪvər/' },
-          { word: 'picked up', meaning: '집어 들었다', pronunciation: '/pɪkt ʌp/' },
-          { word: 'smooth', meaning: '매끄러운', pronunciation: '/smuːð/' },
-          { word: 'stones', meaning: '돌들', pronunciation: '/stoʊnz/' },
-        ],
-      },
-      standard: {
-        english: 'He chose five smooth stones from the brook.',
-        words: [
-          { word: 'chose', meaning: '골랐다 (choose의 과거형)', pronunciation: '/tʃoʊz/' },
-          { word: 'smooth', meaning: '매끄러운', pronunciation: '/smuːð/' },
-          { word: 'brook', meaning: '시내, 작은 개울', pronunciation: '/brʊk/' },
-        ],
-      },
+      english: 'He chose five smooth stones from the brook.',
+      words: [
+        {
+          word: 'chose',
+          meaning: '골랐다 (choose의 과거형)',
+          pronunciation: '/tʃoʊz/',
+        },
+        {
+          word: 'smooth',
+          meaning: '매끄러운',
+          pronunciation: '/smuːð/',
+        },
+        {
+          word: 'brook',
+          meaning: '시내, 작은 개울',
+          pronunciation: '/brʊk/',
+        },
+      ],
     },
     {
       korean: '돌들을 가방에 넣고, 손에는 물매를 들었어요.',
       reference: '1 Samuel 17:40',
-      easy: {
-        english: 'He put the stones in his bag and held his sling in his hand.',
-        words: [
-          { word: 'put', meaning: '넣었다 (put의 과거형)', pronunciation: '/pʊt/' },
-          { word: 'bag', meaning: '가방', pronunciation: '/bæɡ/' },
-          { word: 'held', meaning: '들었다 (hold의 과거형)', pronunciation: '/hɛld/' },
-          { word: 'sling', meaning: '물매 (돌을 던지는 도구)', pronunciation: '/slɪŋ/' },
-          { word: 'hand', meaning: '손', pronunciation: '/hænd/' },
-        ],
-      },
-      standard: {
-        english: "He put them in his shepherd's bag, and with his sling in his hand, he drew near to the Philistine.",
-        words: [
-          { word: "shepherd's", meaning: '양치기의', pronunciation: "/ˈʃɛpərdz/" },
-          { word: 'sling', meaning: '물매', pronunciation: '/slɪŋ/' },
-          { word: 'drew near', meaning: '가까이 다가갔다', pronunciation: '/druː nɪər/' },
-        ],
-      },
+      english: "He put them in his shepherd's bag, and with his sling in his hand, he drew near to the Philistine.",
+      words: [
+        {
+          word: "shepherd's",
+          meaning: '양치기의',
+          pronunciation: '/ˈʃɛpərdz/',
+        },
+        {
+          word: 'sling',
+          meaning: '물매',
+          pronunciation: '/slɪŋ/',
+        },
+        {
+          word: 'drew near',
+          meaning: '가까이 다가갔다',
+          pronunciation: '/druː nɪər/',
+        },
+      ],
     },
     {
       korean: '골리앗이 다윗을 향해 다가왔어요. 거인은 그 어린 소년을 보고 비웃었어요.',
       reference: '1 Samuel 17:41–42',
-      easy: {
-        english: 'Goliath came toward David. When the giant saw the boy, he laughed.',
-        words: [
-          { word: 'toward', meaning: '~을 향해', pronunciation: '/təˈwɔːrd/' },
-          { word: 'giant', meaning: '거인', pronunciation: '/ˈdʒaɪənt/' },
-          { word: 'laughed', meaning: '웃었다, 비웃었다', pronunciation: '/læft/' },
-        ],
-      },
-      standard: {
-        english: 'When the Philistine looked and saw David, he was angry, for David was just a young boy.',
-        words: [
-          { word: 'looked', meaning: '보았다 (look의 과거형)', pronunciation: '/lʊkt/' },
-          { word: 'angry', meaning: '화난', pronunciation: '/ˈæŋɡri/' },
-          { word: 'just', meaning: '그저, 단지', pronunciation: '/dʒʌst/' },
-        ],
-      },
+      english: 'When the Philistine looked and saw David, he was angry, for David was just a young boy.',
+      words: [
+        {
+          word: 'looked',
+          meaning: '보았다 (look의 과거형)',
+          pronunciation: '/lʊkt/',
+        },
+        {
+          word: 'angry',
+          meaning: '화난',
+          pronunciation: '/ˈæŋɡri/',
+        },
+        {
+          word: 'just',
+          meaning: '그저, 단지',
+          pronunciation: '/dʒʌst/',
+        },
+      ],
     },
     {
       korean: '"내가 개냐? 막대기를 들고 내게 오느냐?" 골리앗이 외쳤어요.',
       reference: '1 Samuel 17:43',
-      easy: {
-        english: '"Am I a dog, that you come at me with sticks?" Goliath shouted.',
-        words: [
-          { word: 'dog', meaning: '개', pronunciation: '/dɒɡ/' },
-          { word: 'come', meaning: '오다', pronunciation: '/kʌm/' },
-          { word: 'sticks', meaning: '막대기들', pronunciation: '/stɪks/' },
-        ],
-      },
-      standard: {
-        english: 'The Philistine said, "Am I a dog, that you come at me with sticks?"',
-        words: [
-          { word: 'dog', meaning: '개', pronunciation: '/dɒɡ/' },
-          { word: 'sticks', meaning: '막대기들', pronunciation: '/stɪks/' },
-        ],
-      },
+      english: 'The Philistine said, "Am I a dog, that you come at me with sticks?"',
+      words: [
+        {
+          word: 'dog',
+          meaning: '개',
+          pronunciation: '/dɒɡ/',
+        },
+        {
+          word: 'sticks',
+          meaning: '막대기들',
+          pronunciation: '/stɪks/',
+        },
+      ],
     },
     {
       korean: '다윗이 말했어요. "당신은 칼을 들고 오지만, 나는 이스라엘 하나님의 이름으로 옵니다."',
       reference: '1 Samuel 17:45',
-      easy: {
-        english: 'David said, "You come with a sword. I come in the name of the God of Israel."',
-        words: [
-          { word: 'sword', meaning: '칼', pronunciation: '/sɔːrd/' },
-          { word: 'name', meaning: '이름', pronunciation: '/neɪm/' },
-        ],
-      },
-      standard: {
-        english: 'David replied, "You come with a sword and a spear. I come in the name of the Lord, the God of the armies of Israel."',
-        words: [
-          { word: 'replied', meaning: '대답했다', pronunciation: '/rɪˈplaɪd/' },
-          { word: 'spear', meaning: '창', pronunciation: '/spɪər/' },
-          { word: 'Lord', meaning: '주, 여호와', pronunciation: '/lɔːrd/' },
-          { word: 'armies', meaning: '군대들', pronunciation: '/ˈɑːrmiz/' },
-        ],
-      },
+      english: 'David replied, "You come with a sword and a spear. I come in the name of the Lord, the God of the armies of Israel."',
+      words: [
+        {
+          word: 'replied',
+          meaning: '대답했다',
+          pronunciation: '/rɪˈplaɪd/',
+        },
+        {
+          word: 'spear',
+          meaning: '창',
+          pronunciation: '/spɪər/',
+        },
+        {
+          word: 'Lord',
+          meaning: '주, 여호와',
+          pronunciation: '/lɔːrd/',
+        },
+        {
+          word: 'armies',
+          meaning: '군대들',
+          pronunciation: '/ˈɑːrmiz/',
+        },
+      ],
     },
     {
       korean: '"오늘 온 세상이 이스라엘에 하나님이 계심을 알게 될 것입니다."',
       reference: '1 Samuel 17:46',
-      easy: {
-        english: '"Today, all the world will see that there is a God in Israel."',
-        words: [
-          { word: 'today', meaning: '오늘', pronunciation: '/təˈdeɪ/' },
-          { word: 'world', meaning: '세상, 세계', pronunciation: '/wɜːrld/' },
-        ],
-      },
-      standard: {
-        english: '"This day all the earth shall know that there is a God in Israel."',
-        words: [
-          { word: 'earth', meaning: '땅, 온 세상', pronunciation: '/ɜːrθ/' },
-          { word: 'shall', meaning: '~할 것이다 (will의 격식체)', pronunciation: '/ʃæl/' },
-          { word: 'know', meaning: '알다', pronunciation: '/noʊ/' },
-        ],
-      },
+      english: '"This day all the earth shall know that there is a God in Israel."',
+      words: [
+        {
+          word: 'earth',
+          meaning: '땅, 온 세상',
+          pronunciation: '/ɜːrθ/',
+        },
+        {
+          word: 'shall',
+          meaning: '~할 것이다 (will의 격식체)',
+          pronunciation: '/ʃæl/',
+        },
+        {
+          word: 'know',
+          meaning: '알다',
+          pronunciation: '/noʊ/',
+        },
+      ],
     },
     {
       korean: '그러고 나서 다윗은 빠르게 거인을 향해 달려갔어요.',
       reference: '1 Samuel 17:48',
-      easy: {
-        english: 'Then David ran quickly toward the giant.',
-        words: [
-          { word: 'ran', meaning: '달렸다 (run의 과거형)', pronunciation: '/ræn/' },
-          { word: 'quickly', meaning: '빨리', pronunciation: '/ˈkwɪkli/' },
-          { word: 'toward', meaning: '~을 향해', pronunciation: '/təˈwɔːrd/' },
-        ],
-      },
-      standard: {
-        english: 'As the Philistine arose to meet him, David ran quickly toward the battle line.',
-        words: [
-          { word: 'arose', meaning: '일어섰다 (arise의 과거형)', pronunciation: '/əˈroʊz/' },
-          { word: 'meet', meaning: '만나다', pronunciation: '/miːt/' },
-          { word: 'battle line', meaning: '전선, 전투 대열', pronunciation: '/ˈbætl laɪn/' },
-        ],
-      },
+      english: 'As the Philistine arose to meet him, David ran quickly toward the battle line.',
+      words: [
+        {
+          word: 'arose',
+          meaning: '일어섰다 (arise의 과거형)',
+          pronunciation: '/əˈroʊz/',
+        },
+        {
+          word: 'meet',
+          meaning: '만나다',
+          pronunciation: '/miːt/',
+        },
+        {
+          word: 'battle line',
+          meaning: '전선, 전투 대열',
+          pronunciation: '/ˈbætl laɪn/',
+        },
+      ],
     },
     {
       korean: '가방에서 돌 하나를 꺼내 물매에 넣었어요.',
       reference: '1 Samuel 17:49',
-      easy: {
-        english: 'He took a stone from his bag and put it in his sling.',
-        words: [
-          { word: 'took', meaning: '꺼냈다, 가져갔다', pronunciation: '/tʊk/' },
-          { word: 'stone', meaning: '돌', pronunciation: '/stoʊn/' },
-        ],
-      },
-      standard: {
-        english: 'He put his hand in his bag, took out a stone, and placed it in his sling.',
-        words: [
-          { word: 'placed', meaning: '놓았다 (place의 과거형)', pronunciation: '/pleɪst/' },
-        ],
-      },
+      english: 'He put his hand in his bag, took out a stone, and placed it in his sling.',
+      words: [
+        {
+          word: 'placed',
+          meaning: '놓았다 (place의 과거형)',
+          pronunciation: '/pleɪst/',
+        },
+      ],
     },
     {
       korean: '물매를 휘둘러 돌을 날렸어요.',
       reference: '1 Samuel 17:49',
-      easy: {
-        english: 'He swung the sling and let the stone fly.',
-        words: [
-          { word: 'swung', meaning: '휘둘렀다 (swing의 과거형)', pronunciation: '/swʌŋ/' },
-          { word: 'let', meaning: '~하게 했다', pronunciation: '/lɛt/' },
-          { word: 'fly', meaning: '날다', pronunciation: '/flaɪ/' },
-        ],
-      },
-      standard: {
-        english: 'He slung the stone, and it flew through the air.',
-        words: [
-          { word: 'slung', meaning: '던졌다 (sling의 과거형)', pronunciation: '/slʌŋ/' },
-          { word: 'flew', meaning: '날아갔다 (fly의 과거형)', pronunciation: '/fluː/' },
-          { word: 'air', meaning: '공기, 공중', pronunciation: '/ɛər/' },
-        ],
-      },
+      english: 'He slung the stone, and it flew through the air.',
+      words: [
+        {
+          word: 'slung',
+          meaning: '던졌다 (sling의 과거형)',
+          pronunciation: '/slʌŋ/',
+        },
+        {
+          word: 'flew',
+          meaning: '날아갔다 (fly의 과거형)',
+          pronunciation: '/fluː/',
+        },
+        {
+          word: 'air',
+          meaning: '공기, 공중',
+          pronunciation: '/ɛər/',
+        },
+      ],
     },
     {
       korean: '돌이 골리앗의 이마를 맞혔어요. 거인이 땅에 쓰러졌어요.',
       reference: '1 Samuel 17:49',
-      easy: {
-        english: "The stone hit Goliath's forehead. The giant fell to the ground.",
-        words: [
-          { word: 'hit', meaning: '맞혔다, 쳤다', pronunciation: '/hɪt/' },
-          { word: 'forehead', meaning: '이마', pronunciation: '/ˈfɔːrhɛd/' },
-          { word: 'fell', meaning: '쓰러졌다 (fall의 과거형)', pronunciation: '/fɛl/' },
-          { word: 'ground', meaning: '땅, 바닥', pronunciation: '/ɡraʊnd/' },
-        ],
-      },
-      standard: {
-        english: "The stone struck the Philistine's forehead, and he fell face down on the ground.",
-        words: [
-          { word: 'struck', meaning: '쳤다, 맞혔다 (strike의 과거형)', pronunciation: '/strʌk/' },
-          { word: 'forehead', meaning: '이마', pronunciation: '/ˈfɔːrhɛd/' },
-          { word: 'face down', meaning: '얼굴을 아래로 하고', pronunciation: '/feɪs daʊn/' },
-        ],
-      },
+      english: "The stone struck the Philistine's forehead, and he fell face down on the ground.",
+      words: [
+        {
+          word: 'struck',
+          meaning: '쳤다, 맞혔다 (strike의 과거형)',
+          pronunciation: '/strʌk/',
+        },
+        {
+          word: 'forehead',
+          meaning: '이마',
+          pronunciation: '/ˈfɔːrhɛd/',
+        },
+        {
+          word: 'face down',
+          meaning: '얼굴을 아래로 하고',
+          pronunciation: '/feɪs daʊn/',
+        },
+      ],
     },
     {
       korean: '다윗이 이겼어요. 이스라엘 군대는 기뻐서 환호성을 질렀어요.',
       reference: '1 Samuel 17:51–52',
-      easy: {
-        english: 'David won. The army of Israel cheered with joy.',
-        words: [
-          { word: 'won', meaning: '이겼다 (win의 과거형)', pronunciation: '/wʌn/' },
-          { word: 'cheered', meaning: '환호했다', pronunciation: '/tʃɪərd/' },
-          { word: 'joy', meaning: '기쁨', pronunciation: '/dʒɔɪ/' },
-        ],
-      },
-      standard: {
-        english: 'David defeated the giant. The army of Israel rose up and shouted in triumph.',
-        words: [
-          { word: 'defeated', meaning: '이겼다, 무찔렀다', pronunciation: '/dɪˈfiːtɪd/' },
-          { word: 'rose up', meaning: '일어섰다', pronunciation: '/roʊz ʌp/' },
-          { word: 'shouted', meaning: '소리쳤다', pronunciation: '/ˈʃaʊtɪd/' },
-          { word: 'triumph', meaning: '승리', pronunciation: '/ˈtraɪʌmf/' },
-        ],
-      },
+      english: 'David defeated the giant. The army of Israel rose up and shouted in triumph.',
+      words: [
+        {
+          word: 'defeated',
+          meaning: '이겼다, 무찔렀다',
+          pronunciation: '/dɪˈfiːtɪd/',
+        },
+        {
+          word: 'rose up',
+          meaning: '일어섰다',
+          pronunciation: '/roʊz ʌp/',
+        },
+        {
+          word: 'shouted',
+          meaning: '소리쳤다',
+          pronunciation: '/ˈʃaʊtɪd/',
+        },
+        {
+          word: 'triumph',
+          meaning: '승리',
+          pronunciation: '/ˈtraɪʌmf/',
+        },
+      ],
     },
   ],
   quiz: [
@@ -1098,7 +1200,12 @@ export const davidLesson2: Lesson = {
     },
     {
       question: '다윗이 시냇가에서 가져온 돌은 몇 개일까요?',
-      options: ['5개', '1개', '7개', '10개'],
+      options: [
+        '5개',
+        '1개',
+        '7개',
+        '10개',
+      ],
       correctIndex: 0,
       explanation: 'five smooth stones — 매끄러운 돌 다섯 개. 다윗은 그중 하나만 사용해 골리앗을 쓰러뜨렸어요.',
     },
@@ -1125,261 +1232,253 @@ export const noahLesson1: Lesson = {
   description: '세상이 어두워졌을 때 하나님과 함께 걷던 한 사람. 큰 홍수에 대비해 거대한 방주를 짓기 시작해요.',
   estimatedMinutes: 5,
   source: {
-    easy: {
-      label: 'Genesis 6, Bible in Basic English (BBE) — Public Domain',
-      url: 'https://ebible.org/bbe/GEN06.htm',
-    },
-    standard: {
-      label: 'Genesis 6, World English Bible (WEB) — Public Domain',
-      url: 'https://ebible.org/web/GEN06.htm',
-    },
+    label: 'Genesis 6, World English Bible (WEB) — Public Domain',
+    url: 'https://ebible.org/web/GEN06.htm',
   },
   sentences: [
     {
       korean: '많은 세월이 흘렀어요. 세상은 나쁜 일들로 가득 차게 되었어요.',
       reference: 'Genesis 6:5',
-      easy: {
-        english: 'Many years passed. The world became full of bad things.',
-        words: [
-          { word: 'years', meaning: '년, 해', pronunciation: '/jɪərz/' },
-          { word: 'passed', meaning: '지나갔다 (pass의 과거형)', pronunciation: '/pæst/' },
-          { word: 'world', meaning: '세상', pronunciation: '/wɜːrld/' },
-          { word: 'became', meaning: '~이 되었다 (become의 과거형)', pronunciation: '/bɪˈkeɪm/' },
-          { word: 'full', meaning: '가득 찬', pronunciation: '/fʊl/' },
-          { word: 'bad', meaning: '나쁜', pronunciation: '/bæd/' },
-        ],
-      },
-      standard: {
-        english: 'Many years passed, and the wickedness of mankind grew great upon the earth.',
-        words: [
-          { word: 'wickedness', meaning: '악함, 사악함', pronunciation: '/ˈwɪkɪdnəs/' },
-          { word: 'mankind', meaning: '인류, 사람들', pronunciation: '/mænˈkaɪnd/' },
-          { word: 'grew', meaning: '커졌다 (grow의 과거형)', pronunciation: '/ɡruː/' },
-          { word: 'upon', meaning: '~위에', pronunciation: '/əˈpɒn/' },
-        ],
-      },
+      english: 'Many years passed, and the wickedness of mankind grew great upon the earth.',
+      words: [
+        {
+          word: 'wickedness',
+          meaning: '악함, 사악함',
+          pronunciation: '/ˈwɪkɪdnəs/',
+        },
+        {
+          word: 'mankind',
+          meaning: '인류, 사람들',
+          pronunciation: '/mænˈkaɪnd/',
+        },
+        {
+          word: 'grew',
+          meaning: '커졌다 (grow의 과거형)',
+          pronunciation: '/ɡruː/',
+        },
+        {
+          word: 'upon',
+          meaning: '~위에',
+          pronunciation: '/əˈpɒn/',
+        },
+      ],
     },
     {
       korean: '사람들은 친절하지 않았어요. 서로를 다치게 했고 하나님을 잊었어요.',
       reference: 'Genesis 6:5',
-      easy: {
-        english: 'People were unkind. They hurt each other and forgot God.',
-        words: [
-          { word: 'unkind', meaning: '친절하지 않은', pronunciation: '/ʌnˈkaɪnd/' },
-          { word: 'hurt', meaning: '다치게 했다', pronunciation: '/hɜːrt/' },
-          { word: 'each other', meaning: '서로', pronunciation: '/iːtʃ ˈʌðər/' },
-          { word: 'forgot', meaning: '잊었다 (forget의 과거형)', pronunciation: '/fərˈɡɒt/' },
-        ],
-      },
-      standard: {
-        english: 'People were cruel and violent, and they had forgotten the God who made them.',
-        words: [
-          { word: 'cruel', meaning: '잔인한', pronunciation: '/ˈkruːəl/' },
-          { word: 'violent', meaning: '폭력적인', pronunciation: '/ˈvaɪələnt/' },
-          { word: 'forgotten', meaning: '잊혀진 (forget의 과거분사)', pronunciation: '/fərˈɡɒtn/' },
-        ],
-      },
+      english: 'People were cruel and violent, and they had forgotten the God who made them.',
+      words: [
+        {
+          word: 'cruel',
+          meaning: '잔인한',
+          pronunciation: '/ˈkruːəl/',
+        },
+        {
+          word: 'violent',
+          meaning: '폭력적인',
+          pronunciation: '/ˈvaɪələnt/',
+        },
+        {
+          word: 'forgotten',
+          meaning: '잊혀진 (forget의 과거분사)',
+          pronunciation: '/fərˈɡɒtn/',
+        },
+      ],
     },
     {
       korean: '하나님은 세상이 그렇게 된 것을 보고 슬퍼하셨어요.',
       reference: 'Genesis 6:6',
-      easy: {
-        english: 'God was sad about what the world had become.',
-        words: [
-          { word: 'sad', meaning: '슬픈', pronunciation: '/sæd/' },
-          { word: 'about', meaning: '~에 대해', pronunciation: '/əˈbaʊt/' },
-          { word: 'become', meaning: '~이 되다', pronunciation: '/bɪˈkʌm/' },
-        ],
-      },
-      standard: {
-        english: "It grieved God's heart to see what the world had become.",
-        words: [
-          { word: 'grieved', meaning: '슬프게 했다', pronunciation: '/ɡriːvd/' },
-          { word: 'heart', meaning: '마음, 심장', pronunciation: '/hɑːrt/' },
-        ],
-      },
+      english: "It grieved God's heart to see what the world had become.",
+      words: [
+        {
+          word: 'grieved',
+          meaning: '슬프게 했다',
+          pronunciation: '/ɡriːvd/',
+        },
+        {
+          word: 'heart',
+          meaning: '마음, 심장',
+          pronunciation: '/hɑːrt/',
+        },
+      ],
     },
     {
       korean: '하지만 하나님과 함께 걸은 한 사람이 있었어요. 그의 이름은 노아였어요.',
       reference: 'Genesis 6:9',
-      easy: {
-        english: 'But there was one man named Noah, who walked with God.',
-        words: [
-          { word: 'named', meaning: '~라는 이름의', pronunciation: '/neɪmd/' },
-          { word: 'walked', meaning: '걸었다 (walk의 과거형)', pronunciation: '/wɔːkt/' },
-        ],
-      },
-      standard: {
-        english: 'But there was one man, named Noah, who walked with God and found favor in his eyes.',
-        words: [
-          { word: 'favor', meaning: '호의, 은혜', pronunciation: '/ˈfeɪvər/' },
-          { word: 'eyes', meaning: '눈 (복수)', pronunciation: '/aɪz/' },
-        ],
-      },
+      english: 'But there was one man, named Noah, who walked with God and found favor in his eyes.',
+      words: [
+        {
+          word: 'favor',
+          meaning: '호의, 은혜',
+          pronunciation: '/ˈfeɪvər/',
+        },
+        {
+          word: 'eyes',
+          meaning: '눈 (복수)',
+          pronunciation: '/aɪz/',
+        },
+      ],
     },
     {
       korean: '노아는 선한 사람이었어요. 다른 사람들과 달랐어요.',
       reference: 'Genesis 6:9',
-      easy: {
-        english: 'Noah was a good man. He was different from the others.',
-        words: [
-          { word: 'good', meaning: '선한, 좋은', pronunciation: '/ɡʊd/' },
-          { word: 'different', meaning: '다른', pronunciation: '/ˈdɪfərənt/' },
-          { word: 'others', meaning: '다른 사람들', pronunciation: '/ˈʌðərz/' },
-        ],
-      },
-      standard: {
-        english: 'Noah was a righteous man, blameless among the people of his time.',
-        words: [
-          { word: 'righteous', meaning: '의로운', pronunciation: '/ˈraɪtʃəs/' },
-          { word: 'blameless', meaning: '흠 없는', pronunciation: '/ˈbleɪmləs/' },
-          { word: 'among', meaning: '~사이에서', pronunciation: '/əˈmʌŋ/' },
-        ],
-      },
+      english: 'Noah was a righteous man, blameless among the people of his time.',
+      words: [
+        {
+          word: 'righteous',
+          meaning: '의로운',
+          pronunciation: '/ˈraɪtʃəs/',
+        },
+        {
+          word: 'blameless',
+          meaning: '흠 없는',
+          pronunciation: '/ˈbleɪmləs/',
+        },
+        {
+          word: 'among',
+          meaning: '~사이에서',
+          pronunciation: '/əˈmʌŋ/',
+        },
+      ],
     },
     {
       korean: '노아에게는 세 아들이 있었어요 — 셈, 함, 그리고 야벳.',
       reference: 'Genesis 6:10',
-      easy: {
-        english: 'Noah had three sons: Shem, Ham, and Japheth.',
-        words: [
-          { word: 'three', meaning: '셋', pronunciation: '/θriː/' },
-          { word: 'sons', meaning: '아들들', pronunciation: '/sʌnz/' },
-        ],
-      },
-      standard: {
-        english: 'Noah had three sons: Shem, Ham, and Japheth.',
-        words: [
-          { word: 'three', meaning: '셋', pronunciation: '/θriː/' },
-          { word: 'sons', meaning: '아들들', pronunciation: '/sʌnz/' },
-        ],
-      },
+      english: 'Noah had three sons: Shem, Ham, and Japheth.',
+      words: [
+        {
+          word: 'three',
+          meaning: '셋',
+          pronunciation: '/θriː/',
+        },
+        {
+          word: 'sons',
+          meaning: '아들들',
+          pronunciation: '/sʌnz/',
+        },
+      ],
     },
     {
       korean: '하나님이 노아에게 말씀하셨어요. "내가 땅 위에 큰 홍수를 보낼 것이다."',
       reference: 'Genesis 6:13, 17',
-      easy: {
-        english: 'God spoke to Noah. "I will send a great flood over the earth."',
-        words: [
-          { word: 'spoke', meaning: '말했다 (speak의 과거형)', pronunciation: '/spoʊk/' },
-          { word: 'send', meaning: '보내다', pronunciation: '/sɛnd/' },
-          { word: 'great', meaning: '큰', pronunciation: '/ɡreɪt/' },
-          { word: 'flood', meaning: '홍수', pronunciation: '/flʌd/' },
-        ],
-      },
-      standard: {
-        english: 'God said to Noah, "I am going to bring a great flood upon the earth."',
-        words: [
-          { word: 'bring', meaning: '가져오다, 보내다', pronunciation: '/brɪŋ/' },
-          { word: 'flood', meaning: '홍수', pronunciation: '/flʌd/' },
-          { word: 'upon', meaning: '~위에', pronunciation: '/əˈpɒn/' },
-        ],
-      },
+      english: 'God said to Noah, "I am going to bring a great flood upon the earth."',
+      words: [
+        {
+          word: 'bring',
+          meaning: '가져오다, 보내다',
+          pronunciation: '/brɪŋ/',
+        },
+        {
+          word: 'flood',
+          meaning: '홍수',
+          pronunciation: '/flʌd/',
+        },
+        {
+          word: 'upon',
+          meaning: '~위에',
+          pronunciation: '/əˈpɒn/',
+        },
+      ],
     },
     {
       korean: '"튼튼한 나무로 큰 배 — 방주 — 를 만들어라."',
       reference: 'Genesis 6:14',
-      easy: {
-        english: '"Build a great boat — an ark — of strong wood."',
-        words: [
-          { word: 'build', meaning: '짓다, 만들다', pronunciation: '/bɪld/' },
-          { word: 'boat', meaning: '배', pronunciation: '/boʊt/' },
-          { word: 'ark', meaning: '방주, 큰 배', pronunciation: '/ɑːrk/' },
-          { word: 'strong', meaning: '튼튼한, 강한', pronunciation: '/strɔːŋ/' },
-          { word: 'wood', meaning: '나무, 목재', pronunciation: '/wʊd/' },
-        ],
-      },
-      standard: {
-        english: '"Make yourself an ark of cypress wood, sealed inside and out."',
-        words: [
-          { word: 'ark', meaning: '방주', pronunciation: '/ɑːrk/' },
-          { word: 'cypress', meaning: '잣나무 (편백 종류)', pronunciation: '/ˈsaɪprəs/' },
-          { word: 'sealed', meaning: '봉인된, 막은', pronunciation: '/siːld/' },
-        ],
-      },
+      english: '"Make yourself an ark of cypress wood, sealed inside and out."',
+      words: [
+        {
+          word: 'ark',
+          meaning: '방주',
+          pronunciation: '/ɑːrk/',
+        },
+        {
+          word: 'cypress',
+          meaning: '잣나무 (편백 종류)',
+          pronunciation: '/ˈsaɪprəs/',
+        },
+        {
+          word: 'sealed',
+          meaning: '봉인된, 막은',
+          pronunciation: '/siːld/',
+        },
+      ],
     },
     {
       korean: '"길고 높게 만들고, 안에는 방을 두고 위에는 지붕을 덮어라."',
       reference: 'Genesis 6:14–16',
-      easy: {
-        english: '"Make it long and tall, with rooms inside and a roof on top."',
-        words: [
-          { word: 'long', meaning: '긴', pronunciation: '/lɔːŋ/' },
-          { word: 'tall', meaning: '높은', pronunciation: '/tɔːl/' },
-          { word: 'rooms', meaning: '방들', pronunciation: '/ruːmz/' },
-          { word: 'inside', meaning: '안에', pronunciation: '/ɪnˈsaɪd/' },
-          { word: 'roof', meaning: '지붕', pronunciation: '/ruːf/' },
-          { word: 'top', meaning: '꼭대기, 위', pronunciation: '/tɒp/' },
-        ],
-      },
-      standard: {
-        english: '"Make it long and tall, with rooms inside and a roof above."',
-        words: [
-          { word: 'rooms', meaning: '방들', pronunciation: '/ruːmz/' },
-          { word: 'roof', meaning: '지붕', pronunciation: '/ruːf/' },
-          { word: 'above', meaning: '위에', pronunciation: '/əˈbʌv/' },
-        ],
-      },
+      english: '"Make it long and tall, with rooms inside and a roof above."',
+      words: [
+        {
+          word: 'rooms',
+          meaning: '방들',
+          pronunciation: '/ruːmz/',
+        },
+        {
+          word: 'roof',
+          meaning: '지붕',
+          pronunciation: '/ruːf/',
+        },
+        {
+          word: 'above',
+          meaning: '위에',
+          pronunciation: '/əˈbʌv/',
+        },
+      ],
     },
     {
       korean: '"너와 네 가족이 들어가고, 모든 동물을 한 쌍씩 데리고 들어가라."',
       reference: 'Genesis 6:18–19',
-      easy: {
-        english: '"You and your family will go inside, with two of every animal."',
-        words: [
-          { word: 'family', meaning: '가족', pronunciation: '/ˈfæməli/' },
-          { word: 'inside', meaning: '안에', pronunciation: '/ɪnˈsaɪd/' },
-          { word: 'two', meaning: '둘', pronunciation: '/tuː/' },
-          { word: 'every', meaning: '모든', pronunciation: '/ˈɛvri/' },
-          { word: 'animal', meaning: '동물', pronunciation: '/ˈænɪməl/' },
-        ],
-      },
-      standard: {
-        english: '"You and your wife, your sons and their wives will go in, with two of every kind of animal."',
-        words: [
-          { word: 'wife', meaning: '아내', pronunciation: '/waɪf/' },
-          { word: 'wives', meaning: '아내들', pronunciation: '/waɪvz/' },
-          { word: 'kind', meaning: '종류', pronunciation: '/kaɪnd/' },
-        ],
-      },
+      english: '"You and your wife, your sons and their wives will go in, with two of every kind of animal."',
+      words: [
+        {
+          word: 'wife',
+          meaning: '아내',
+          pronunciation: '/waɪf/',
+        },
+        {
+          word: 'wives',
+          meaning: '아내들',
+          pronunciation: '/waɪvz/',
+        },
+        {
+          word: 'kind',
+          meaning: '종류',
+          pronunciation: '/kaɪnd/',
+        },
+      ],
     },
     {
       korean: '그래서 노아와 아들들은 일을 시작했어요. 오랜 시간 동안 일했어요.',
       reference: 'Genesis 6:22',
-      easy: {
-        english: 'So Noah and his sons began to build. They worked for a long time.',
-        words: [
-          { word: 'began', meaning: '시작했다 (begin의 과거형)', pronunciation: '/bɪˈɡæn/' },
-          { word: 'worked', meaning: '일했다', pronunciation: '/wɜːrkt/' },
-          { word: 'time', meaning: '시간', pronunciation: '/taɪm/' },
-        ],
-      },
-      standard: {
-        english: 'So Noah and his sons began to build. The work took many years.',
-        words: [
-          { word: 'began', meaning: '시작했다 (begin의 과거형)', pronunciation: '/bɪˈɡæn/' },
-          { word: 'took', meaning: '걸렸다 (take의 과거형)', pronunciation: '/tʊk/' },
-        ],
-      },
+      english: 'So Noah and his sons began to build. The work took many years.',
+      words: [
+        {
+          word: 'began',
+          meaning: '시작했다 (begin의 과거형)',
+          pronunciation: '/bɪˈɡæn/',
+        },
+        {
+          word: 'took',
+          meaning: '걸렸다 (take의 과거형)',
+          pronunciation: '/tʊk/',
+        },
+      ],
     },
     {
       korean: '노아는 하나님이 말씀하신 모든 것을 그대로 행했어요.',
       reference: 'Genesis 6:22',
-      easy: {
-        english: 'Noah did everything God had told him to do.',
-        words: [
-          { word: 'did', meaning: '했다 (do의 과거형)', pronunciation: '/dɪd/' },
-          { word: 'everything', meaning: '모든 것', pronunciation: '/ˈɛvriθɪŋ/' },
-          { word: 'told', meaning: '말했다 (tell의 과거형)', pronunciation: '/toʊld/' },
-        ],
-      },
-      standard: {
-        english: 'Noah did everything just as God had commanded him.',
-        words: [
-          { word: 'just as', meaning: '~한 그대로', pronunciation: '/dʒʌst æz/' },
-          { word: 'commanded', meaning: '명하셨다 (command의 과거형)', pronunciation: '/kəˈmændɪd/' },
-        ],
-      },
+      english: 'Noah did everything just as God had commanded him.',
+      words: [
+        {
+          word: 'just as',
+          meaning: '~한 그대로',
+          pronunciation: '/dʒʌst æz/',
+        },
+        {
+          word: 'commanded',
+          meaning: '명하셨다 (command의 과거형)',
+          pronunciation: '/kəˈmændɪd/',
+        },
+      ],
     },
   ],
   quiz: [
@@ -1396,7 +1495,12 @@ export const noahLesson1: Lesson = {
     },
     {
       question: '본문에서 "방주"를 의미하는 영어 단어는?',
-      options: ['ark', 'house', 'tent', 'room'],
+      options: [
+        'ark',
+        'house',
+        'tent',
+        'room',
+      ],
       correctIndex: 0,
       explanation: 'ark는 "방주" 또는 "큰 배". 노아가 짓도록 명령받은 거대한 배예요.',
     },
@@ -1423,255 +1527,241 @@ export const noahLesson2: Lesson = {
   description: '방주가 완성되고, 동물들이 들어와요. 비가 사십 일 동안 쏟아져요.',
   estimatedMinutes: 5,
   source: {
-    easy: { label: 'Genesis 7, BBE — Public Domain', url: 'https://ebible.org/bbe/GEN07.htm' },
-    standard: { label: 'Genesis 7, WEB — Public Domain', url: 'https://ebible.org/web/GEN07.htm' },
+    label: 'Genesis 7, WEB — Public Domain',
+    url: 'https://ebible.org/web/GEN07.htm',
   },
   sentences: [
     {
       korean: '여러 해가 지나, 방주가 완성되었어요.',
       reference: 'Genesis 6:22',
-      easy: {
-        english: 'Many years later, the ark was finished.',
-        words: [
-          { word: 'years', meaning: '년, 해', pronunciation: '/jɪərz/' },
-          { word: 'later', meaning: '나중에', pronunciation: '/ˈleɪtər/' },
-          { word: 'finished', meaning: '끝난, 완성된', pronunciation: '/ˈfɪnɪʃt/' },
-        ],
-      },
-      standard: {
-        english: 'Many years later, the ark was completed.',
-        words: [
-          { word: 'completed', meaning: '완성되었다', pronunciation: '/kəmˈpliːtɪd/' },
-        ],
-      },
+      english: 'Many years later, the ark was completed.',
+      words: [
+        {
+          word: 'completed',
+          meaning: '완성되었다',
+          pronunciation: '/kəmˈpliːtɪd/',
+        },
+      ],
     },
     {
       korean: '하나님이 노아에게 말씀하셨어요. "너와 네 가족은 방주 안으로 들어가라."',
       reference: 'Genesis 7:1',
-      easy: {
-        english: 'God said to Noah, "Go inside the ark with your family."',
-        words: [
-          { word: 'inside', meaning: '안으로', pronunciation: '/ɪnˈsaɪd/' },
-          { word: 'family', meaning: '가족', pronunciation: '/ˈfæməli/' },
-        ],
-      },
-      standard: {
-        english: 'God said to Noah, "Enter the ark, you and all your household."',
-        words: [
-          { word: 'enter', meaning: '들어가다', pronunciation: '/ˈɛntər/' },
-          { word: 'household', meaning: '가족, 식구', pronunciation: '/ˈhaʊshoʊld/' },
-        ],
-      },
+      english: 'God said to Noah, "Enter the ark, you and all your household."',
+      words: [
+        {
+          word: 'enter',
+          meaning: '들어가다',
+          pronunciation: '/ˈɛntər/',
+        },
+        {
+          word: 'household',
+          meaning: '가족, 식구',
+          pronunciation: '/ˈhaʊshoʊld/',
+        },
+      ],
     },
     {
       korean: '동물들이 둘씩 짝을 지어 방주로 왔어요.',
       reference: 'Genesis 7:8–9',
-      easy: {
-        english: 'The animals came to the ark, two by two.',
-        words: [
-          { word: 'animals', meaning: '동물들', pronunciation: '/ˈænɪməlz/' },
-          { word: 'came', meaning: '왔다 (come의 과거형)', pronunciation: '/keɪm/' },
-          { word: 'two by two', meaning: '둘씩 짝을 지어', pronunciation: '/tuː baɪ tuː/' },
-        ],
-      },
-      standard: {
-        english: 'The animals came to the ark in pairs, male and female.',
-        words: [
-          { word: 'pairs', meaning: '쌍', pronunciation: '/pɛərz/' },
-          { word: 'male', meaning: '수컷, 남자', pronunciation: '/meɪl/' },
-          { word: 'female', meaning: '암컷, 여자', pronunciation: '/ˈfiːmeɪl/' },
-        ],
-      },
+      english: 'The animals came to the ark in pairs, male and female.',
+      words: [
+        {
+          word: 'pairs',
+          meaning: '쌍',
+          pronunciation: '/pɛərz/',
+        },
+        {
+          word: 'male',
+          meaning: '수컷, 남자',
+          pronunciation: '/meɪl/',
+        },
+        {
+          word: 'female',
+          meaning: '암컷, 여자',
+          pronunciation: '/ˈfiːmeɪl/',
+        },
+      ],
     },
     {
       korean: '큰 동물과 작은 동물, 새와 땅 위의 모든 생물들이.',
       reference: 'Genesis 7:14',
-      easy: {
-        english: 'Big animals and small animals, birds, and creatures of the ground.',
-        words: [
-          { word: 'big', meaning: '큰', pronunciation: '/bɪɡ/' },
-          { word: 'small', meaning: '작은', pronunciation: '/smɔːl/' },
-          { word: 'birds', meaning: '새들', pronunciation: '/bɜːrdz/' },
-          { word: 'creatures', meaning: '생물, 동물', pronunciation: '/ˈkriːtʃərz/' },
-          { word: 'ground', meaning: '땅', pronunciation: '/ɡraʊnd/' },
-        ],
-      },
-      standard: {
-        english: 'Beasts of every kind, birds of every kind, and creatures that crawl on the ground.',
-        words: [
-          { word: 'beasts', meaning: '짐승들', pronunciation: '/biːsts/' },
-          { word: 'kind', meaning: '종류', pronunciation: '/kaɪnd/' },
-          { word: 'crawl', meaning: '기어다니다', pronunciation: '/krɔːl/' },
-        ],
-      },
+      english: 'Beasts of every kind, birds of every kind, and creatures that crawl on the ground.',
+      words: [
+        {
+          word: 'beasts',
+          meaning: '짐승들',
+          pronunciation: '/biːsts/',
+        },
+        {
+          word: 'kind',
+          meaning: '종류',
+          pronunciation: '/kaɪnd/',
+        },
+        {
+          word: 'crawl',
+          meaning: '기어다니다',
+          pronunciation: '/krɔːl/',
+        },
+      ],
     },
     {
       korean: '노아와 아내, 세 아들과 그들의 아내들이 안으로 들어갔어요.',
       reference: 'Genesis 7:13',
-      easy: {
-        english: "Noah, his wife, his three sons, and their wives went in.",
-        words: [
-          { word: 'wife', meaning: '아내', pronunciation: '/waɪf/' },
-          { word: 'wives', meaning: '아내들', pronunciation: '/waɪvz/' },
-          { word: 'sons', meaning: '아들들', pronunciation: '/sʌnz/' },
-        ],
-      },
-      standard: {
-        english: 'Noah and his wife, his three sons, and their wives entered the ark.',
-        words: [
-          { word: 'entered', meaning: '들어갔다', pronunciation: '/ˈɛntərd/' },
-        ],
-      },
+      english: 'Noah and his wife, his three sons, and their wives entered the ark.',
+      words: [
+        {
+          word: 'entered',
+          meaning: '들어갔다',
+          pronunciation: '/ˈɛntərd/',
+        },
+      ],
     },
     {
       korean: '그러고 나서 하나님이 방주의 문을 닫으셨어요.',
       reference: 'Genesis 7:16',
-      easy: {
-        english: 'Then God shut the door of the ark.',
-        words: [
-          { word: 'shut', meaning: '닫았다', pronunciation: '/ʃʌt/' },
-          { word: 'door', meaning: '문', pronunciation: '/dɔːr/' },
-        ],
-      },
-      standard: {
-        english: 'Then the Lord closed the door behind them.',
-        words: [
-          { word: 'closed', meaning: '닫았다', pronunciation: '/kloʊzd/' },
-          { word: 'behind', meaning: '뒤에', pronunciation: '/bɪˈhaɪnd/' },
-        ],
-      },
+      english: 'Then the Lord closed the door behind them.',
+      words: [
+        {
+          word: 'closed',
+          meaning: '닫았다',
+          pronunciation: '/kloʊzd/',
+        },
+        {
+          word: 'behind',
+          meaning: '뒤에',
+          pronunciation: '/bɪˈhaɪnd/',
+        },
+      ],
     },
     {
       korean: '곧 비가 내리기 시작했어요.',
       reference: 'Genesis 7:10–11',
-      easy: {
-        english: 'Soon, the rain began to fall.',
-        words: [
-          { word: 'soon', meaning: '곧', pronunciation: '/suːn/' },
-          { word: 'rain', meaning: '비', pronunciation: '/reɪn/' },
-          { word: 'began', meaning: '시작했다 (begin의 과거형)', pronunciation: '/bɪˈɡæn/' },
-          { word: 'fall', meaning: '떨어지다, 내리다', pronunciation: '/fɔːl/' },
-        ],
-      },
-      standard: {
-        english: 'Soon, the rain began to pour down from the sky.',
-        words: [
-          { word: 'pour', meaning: '쏟아지다', pronunciation: '/pɔːr/' },
-          { word: 'sky', meaning: '하늘', pronunciation: '/skaɪ/' },
-        ],
-      },
+      english: 'Soon, the rain began to pour down from the sky.',
+      words: [
+        {
+          word: 'pour',
+          meaning: '쏟아지다',
+          pronunciation: '/pɔːr/',
+        },
+        {
+          word: 'sky',
+          meaning: '하늘',
+          pronunciation: '/skaɪ/',
+        },
+      ],
     },
     {
       korean: '사십 일 사십 밤 동안 비가 내렸어요.',
       reference: 'Genesis 7:12',
-      easy: {
-        english: 'It rained for forty days and forty nights.',
-        words: [
-          { word: 'rained', meaning: '비가 내렸다', pronunciation: '/reɪnd/' },
-          { word: 'forty', meaning: '사십, 40', pronunciation: '/ˈfɔːrti/' },
-          { word: 'days', meaning: '날들, 일', pronunciation: '/deɪz/' },
-          { word: 'nights', meaning: '밤들', pronunciation: '/naɪts/' },
-        ],
-      },
-      standard: {
-        english: 'The rain continued for forty days and forty nights without stopping.',
-        words: [
-          { word: 'continued', meaning: '계속되었다', pronunciation: '/kənˈtɪnjuːd/' },
-          { word: 'without', meaning: '~없이', pronunciation: '/wɪˈðaʊt/' },
-        ],
-      },
+      english: 'The rain continued for forty days and forty nights without stopping.',
+      words: [
+        {
+          word: 'continued',
+          meaning: '계속되었다',
+          pronunciation: '/kənˈtɪnjuːd/',
+        },
+        {
+          word: 'without',
+          meaning: '~없이',
+          pronunciation: '/wɪˈðaʊt/',
+        },
+      ],
     },
     {
       korean: '물은 점점 더 높이 올라왔어요.',
       reference: 'Genesis 7:18',
-      easy: {
-        english: 'The water rose higher and higher.',
-        words: [
-          { word: 'water', meaning: '물', pronunciation: '/ˈwɔːtər/' },
-          { word: 'rose', meaning: '올라갔다 (rise의 과거형)', pronunciation: '/roʊz/' },
-          { word: 'higher', meaning: '더 높이', pronunciation: '/ˈhaɪər/' },
-        ],
-      },
-      standard: {
-        english: 'The waters increased and rose higher and higher upon the earth.',
-        words: [
-          { word: 'increased', meaning: '늘어났다', pronunciation: '/ɪnˈkriːst/' },
-          { word: 'upon', meaning: '~위에', pronunciation: '/əˈpɒn/' },
-        ],
-      },
+      english: 'The waters increased and rose higher and higher upon the earth.',
+      words: [
+        {
+          word: 'increased',
+          meaning: '늘어났다',
+          pronunciation: '/ɪnˈkriːst/',
+        },
+        {
+          word: 'upon',
+          meaning: '~위에',
+          pronunciation: '/əˈpɒn/',
+        },
+      ],
     },
     {
       korean: '나무를 덮고, 언덕을 덮고, 마침내 높은 산까지 덮었어요.',
       reference: 'Genesis 7:19–20',
-      easy: {
-        english: 'It covered the trees, then the hills, then the high mountains.',
-        words: [
-          { word: 'covered', meaning: '덮었다', pronunciation: '/ˈkʌvərd/' },
-          { word: 'hills', meaning: '언덕들', pronunciation: '/hɪlz/' },
-          { word: 'mountains', meaning: '산들', pronunciation: '/ˈmaʊntənz/' },
-        ],
-      },
-      standard: {
-        english: 'It covered the trees, the hills, and even the highest mountains.',
-        words: [
-          { word: 'highest', meaning: '가장 높은', pronunciation: '/ˈhaɪəst/' },
-          { word: 'even', meaning: '심지어', pronunciation: '/ˈiːvən/' },
-        ],
-      },
+      english: 'It covered the trees, the hills, and even the highest mountains.',
+      words: [
+        {
+          word: 'highest',
+          meaning: '가장 높은',
+          pronunciation: '/ˈhaɪəst/',
+        },
+        {
+          word: 'even',
+          meaning: '심지어',
+          pronunciation: '/ˈiːvən/',
+        },
+      ],
     },
     {
       korean: '하지만 방주는 물 위에 안전하게 떠 있었어요.',
       reference: 'Genesis 7:17–18',
-      easy: {
-        english: 'But the ark floated safely on top of the water.',
-        words: [
-          { word: 'floated', meaning: '떠 있었다', pronunciation: '/ˈfloʊtɪd/' },
-          { word: 'safely', meaning: '안전하게', pronunciation: '/ˈseɪfli/' },
-          { word: 'top', meaning: '위, 꼭대기', pronunciation: '/tɒp/' },
-        ],
-      },
-      standard: {
-        english: 'But the ark was lifted up and floated safely above the waters.',
-        words: [
-          { word: 'lifted', meaning: '들렸다', pronunciation: '/ˈlɪftɪd/' },
-          { word: 'above', meaning: '~위에', pronunciation: '/əˈbʌv/' },
-        ],
-      },
+      english: 'But the ark was lifted up and floated safely above the waters.',
+      words: [
+        {
+          word: 'lifted',
+          meaning: '들렸다',
+          pronunciation: '/ˈlɪftɪd/',
+        },
+        {
+          word: 'above',
+          meaning: '~위에',
+          pronunciation: '/əˈbʌv/',
+        },
+      ],
     },
     {
       korean: '방주 안에서 노아와 가족, 그리고 모든 동물들은 안전했어요.',
       reference: 'Genesis 7:23',
-      easy: {
-        english: 'Inside, Noah and his family and all the animals were safe.',
-        words: [
-          { word: 'inside', meaning: '안에', pronunciation: '/ɪnˈsaɪd/' },
-          { word: 'safe', meaning: '안전한', pronunciation: '/seɪf/' },
-        ],
-      },
-      standard: {
-        english: 'Inside the ark, Noah, his family, and every animal were kept safe.',
-        words: [
-          { word: 'kept', meaning: '지켜졌다', pronunciation: '/kɛpt/' },
-        ],
-      },
+      english: 'Inside the ark, Noah, his family, and every animal were kept safe.',
+      words: [
+        {
+          word: 'kept',
+          meaning: '지켜졌다',
+          pronunciation: '/kɛpt/',
+        },
+      ],
     },
   ],
   quiz: [
     {
       question: '비가 며칠 동안 내렸나요?',
-      options: ['40일', '7일', '100일', '1년'],
+      options: [
+        '40일',
+        '7일',
+        '100일',
+        '1년',
+      ],
       correctIndex: 0,
       explanation: 'forty days and forty nights — 사십 일 사십 밤. 성경에서 "사십"은 "긴 시간, 시험의 시간"을 의미하는 상징적인 숫자예요.',
     },
     {
       question: '본문에서 "떠 있다"를 의미하는 단어는?',
-      options: ['float', 'sink', 'drop', 'stop'],
+      options: [
+        'float',
+        'sink',
+        'drop',
+        'stop',
+      ],
       correctIndex: 0,
       explanation: 'float은 "물 위에 떠 있다"는 뜻. 거꾸로 sink는 "가라앉다".',
     },
     {
       question: '방주의 문을 닫은 사람은?',
-      options: ['하나님', '노아', '노아의 아들들', '동물들'],
+      options: [
+        '하나님',
+        '노아',
+        '노아의 아들들',
+        '동물들',
+      ],
       correctIndex: 0,
       explanation: 'God shut the door — 하나님이 직접 문을 닫으셨어요. 안에 있는 사람과 동물들은 안전하게 보호받았어요.',
     },
@@ -1687,242 +1777,215 @@ export const noahLesson3: Lesson = {
   description: '비가 멈추고, 비둘기가 푸른 잎을 가져와요. 하나님은 무지개로 약속을 주세요.',
   estimatedMinutes: 5,
   source: {
-    easy: { label: 'Genesis 8–9, BBE — Public Domain', url: 'https://ebible.org/bbe/GEN08.htm' },
-    standard: { label: 'Genesis 8–9, WEB — Public Domain', url: 'https://ebible.org/web/GEN08.htm' },
+    label: 'Genesis 8–9, WEB — Public Domain',
+    url: 'https://ebible.org/web/GEN08.htm',
   },
   sentences: [
     {
       korean: '많은 날이 지난 뒤, 비가 멈추었어요.',
       reference: 'Genesis 8:2',
-      easy: {
-        english: 'After many days, the rain stopped.',
-        words: [
-          { word: 'after', meaning: '~후에', pronunciation: '/ˈæftər/' },
-          { word: 'stopped', meaning: '멈추었다', pronunciation: '/stɒpt/' },
-        ],
-      },
-      standard: {
-        english: 'After many days, the rain ceased to fall.',
-        words: [
-          { word: 'ceased', meaning: '그쳤다, 멈추었다', pronunciation: '/siːst/' },
-        ],
-      },
+      english: 'After many days, the rain ceased to fall.',
+      words: [
+        {
+          word: 'ceased',
+          meaning: '그쳤다, 멈추었다',
+          pronunciation: '/siːst/',
+        },
+      ],
     },
     {
       korean: '하나님이 바람을 보내셨고, 물이 줄어들기 시작했어요.',
       reference: 'Genesis 8:1',
-      easy: {
-        english: 'God sent a wind, and the water began to go down.',
-        words: [
-          { word: 'sent', meaning: '보냈다', pronunciation: '/sɛnt/' },
-          { word: 'wind', meaning: '바람', pronunciation: '/wɪnd/' },
-          { word: 'go down', meaning: '내려가다, 줄어들다', pronunciation: '/ɡoʊ daʊn/' },
-        ],
-      },
-      standard: {
-        english: 'God sent a wind across the earth, and the waters began to recede.',
-        words: [
-          { word: 'across', meaning: '~을 가로질러', pronunciation: '/əˈkrɒs/' },
-          { word: 'recede', meaning: '물러가다, 줄어들다', pronunciation: '/rɪˈsiːd/' },
-        ],
-      },
+      english: 'God sent a wind across the earth, and the waters began to recede.',
+      words: [
+        {
+          word: 'across',
+          meaning: '~을 가로질러',
+          pronunciation: '/əˈkrɒs/',
+        },
+        {
+          word: 'recede',
+          meaning: '물러가다, 줄어들다',
+          pronunciation: '/rɪˈsiːd/',
+        },
+      ],
     },
     {
       korean: '방주가 한 산 위에 멈춰 섰어요.',
       reference: 'Genesis 8:4',
-      easy: {
-        english: 'The ark came to rest on a mountain.',
-        words: [
-          { word: 'rest', meaning: '쉬다, 멈추다', pronunciation: '/rɛst/' },
-          { word: 'mountain', meaning: '산', pronunciation: '/ˈmaʊntən/' },
-        ],
-      },
-      standard: {
-        english: 'The ark came to rest on the mountains of Ararat.',
-        words: [
-          { word: 'Ararat', meaning: '아라랏 (산 이름)', pronunciation: '/ˈærəræt/' },
-        ],
-      },
+      english: 'The ark came to rest on the mountains of Ararat.',
+      words: [
+        {
+          word: 'Ararat',
+          meaning: '아라랏 (산 이름)',
+          pronunciation: '/ˈærəræt/',
+        },
+      ],
     },
     {
       korean: '노아는 방주의 창문을 열었어요.',
       reference: 'Genesis 8:6',
-      easy: {
-        english: 'Noah opened the window of the ark.',
-        words: [
-          { word: 'opened', meaning: '열었다', pronunciation: '/ˈoʊpənd/' },
-          { word: 'window', meaning: '창문', pronunciation: '/ˈwɪndoʊ/' },
-        ],
-      },
-      standard: {
-        english: 'Noah opened the window of the ark that he had made.',
-        words: [
-          { word: 'window', meaning: '창문', pronunciation: '/ˈwɪndoʊ/' },
-        ],
-      },
+      english: 'Noah opened the window of the ark that he had made.',
+      words: [
+        {
+          word: 'window',
+          meaning: '창문',
+          pronunciation: '/ˈwɪndoʊ/',
+        },
+      ],
     },
     {
       korean: '비둘기 한 마리를 내보냈어요. 물이 다 빠졌는지 보려고요.',
       reference: 'Genesis 8:8',
-      easy: {
-        english: 'He sent out a dove to see if the water was gone.',
-        words: [
-          { word: 'sent out', meaning: '내보냈다', pronunciation: '/sɛnt aʊt/' },
-          { word: 'dove', meaning: '비둘기', pronunciation: '/dʌv/' },
-          { word: 'gone', meaning: '사라진, 없어진', pronunciation: '/ɡɒn/' },
-        ],
-      },
-      standard: {
-        english: 'He sent out a dove to see whether the waters had gone down.',
-        words: [
-          { word: 'whether', meaning: '~인지 아닌지', pronunciation: '/ˈwɛðər/' },
-        ],
-      },
+      english: 'He sent out a dove to see whether the waters had gone down.',
+      words: [
+        {
+          word: 'whether',
+          meaning: '~인지 아닌지',
+          pronunciation: '/ˈwɛðər/',
+        },
+      ],
     },
     {
       korean: '비둘기가 돌아왔어요. 마른 땅은 아직 없었어요.',
       reference: 'Genesis 8:9',
-      easy: {
-        english: 'The dove came back. There was no dry land yet.',
-        words: [
-          { word: 'came back', meaning: '돌아왔다', pronunciation: '/keɪm bæk/' },
-          { word: 'dry', meaning: '마른', pronunciation: '/draɪ/' },
-          { word: 'yet', meaning: '아직', pronunciation: '/jɛt/' },
-        ],
-      },
-      standard: {
-        english: 'The dove returned because it found no place to rest.',
-        words: [
-          { word: 'returned', meaning: '돌아왔다', pronunciation: '/rɪˈtɜːrnd/' },
-          { word: 'found', meaning: '찾았다', pronunciation: '/faʊnd/' },
-        ],
-      },
+      english: 'The dove returned because it found no place to rest.',
+      words: [
+        {
+          word: 'returned',
+          meaning: '돌아왔다',
+          pronunciation: '/rɪˈtɜːrnd/',
+        },
+        {
+          word: 'found',
+          meaning: '찾았다',
+          pronunciation: '/faʊnd/',
+        },
+      ],
     },
     {
       korean: '7일 후, 노아는 비둘기를 다시 내보냈어요.',
       reference: 'Genesis 8:10',
-      easy: {
-        english: 'Seven days later, Noah sent the dove out again.',
-        words: [
-          { word: 'seven', meaning: '일곱', pronunciation: '/ˈsɛvən/' },
-          { word: 'again', meaning: '다시', pronunciation: '/əˈɡɛn/' },
-        ],
-      },
-      standard: {
-        english: 'Seven days later, Noah sent the dove out once more.',
-        words: [
-          { word: 'once more', meaning: '한 번 더', pronunciation: '/wʌns mɔːr/' },
-        ],
-      },
+      english: 'Seven days later, Noah sent the dove out once more.',
+      words: [
+        {
+          word: 'once more',
+          meaning: '한 번 더',
+          pronunciation: '/wʌns mɔːr/',
+        },
+      ],
     },
     {
       korean: '이번에는 비둘기가 푸른 잎사귀를 입에 물고 돌아왔어요.',
       reference: 'Genesis 8:11',
-      easy: {
-        english: 'This time, the dove came back with a green leaf in its mouth.',
-        words: [
-          { word: 'this time', meaning: '이번에는', pronunciation: '/ðɪs taɪm/' },
-          { word: 'green', meaning: '초록', pronunciation: '/ɡriːn/' },
-          { word: 'leaf', meaning: '잎', pronunciation: '/liːf/' },
-          { word: 'mouth', meaning: '입', pronunciation: '/maʊθ/' },
-        ],
-      },
-      standard: {
-        english: 'This time, the dove returned with a fresh olive leaf in its beak.',
-        words: [
-          { word: 'fresh', meaning: '신선한', pronunciation: '/frɛʃ/' },
-          { word: 'olive', meaning: '올리브 (감람)', pronunciation: '/ˈɒlɪv/' },
-          { word: 'beak', meaning: '부리', pronunciation: '/biːk/' },
-        ],
-      },
+      english: 'This time, the dove returned with a fresh olive leaf in its beak.',
+      words: [
+        {
+          word: 'fresh',
+          meaning: '신선한',
+          pronunciation: '/frɛʃ/',
+        },
+        {
+          word: 'olive',
+          meaning: '올리브 (감람)',
+          pronunciation: '/ˈɒlɪv/',
+        },
+        {
+          word: 'beak',
+          meaning: '부리',
+          pronunciation: '/biːk/',
+        },
+      ],
     },
     {
       korean: '하나님이 노아에게 말씀하셨어요. "방주에서 나오너라. 모든 동물도 함께 데리고."',
       reference: 'Genesis 8:15–17',
-      easy: {
-        english: 'God said to Noah, "Come out of the ark. Bring all the animals with you."',
-        words: [
-          { word: 'come out', meaning: '나오다', pronunciation: '/kʌm aʊt/' },
-          { word: 'bring', meaning: '데려오다', pronunciation: '/brɪŋ/' },
-        ],
-      },
-      standard: {
-        english: 'God said to Noah, "Leave the ark, you and all who are with you."',
-        words: [
-          { word: 'leave', meaning: '떠나다', pronunciation: '/liːv/' },
-        ],
-      },
+      english: 'God said to Noah, "Leave the ark, you and all who are with you."',
+      words: [
+        {
+          word: 'leave',
+          meaning: '떠나다',
+          pronunciation: '/liːv/',
+        },
+      ],
     },
     {
       korean: '그러고 나서 하나님이 하늘에 아름다운 무지개를 두셨어요.',
       reference: 'Genesis 9:13',
-      easy: {
-        english: 'Then God placed a beautiful rainbow in the sky.',
-        words: [
-          { word: 'placed', meaning: '두셨다', pronunciation: '/pleɪst/' },
-          { word: 'beautiful', meaning: '아름다운', pronunciation: '/ˈbjuːtɪfəl/' },
-          { word: 'rainbow', meaning: '무지개', pronunciation: '/ˈreɪnboʊ/' },
-          { word: 'sky', meaning: '하늘', pronunciation: '/skaɪ/' },
-        ],
-      },
-      standard: {
-        english: 'Then God set a rainbow in the clouds as a sign of his promise.',
-        words: [
-          { word: 'set', meaning: '두었다', pronunciation: '/sɛt/' },
-          { word: 'clouds', meaning: '구름', pronunciation: '/klaʊdz/' },
-          { word: 'sign', meaning: '표시, 표징', pronunciation: '/saɪn/' },
-        ],
-      },
+      english: 'Then God set a rainbow in the clouds as a sign of his promise.',
+      words: [
+        {
+          word: 'set',
+          meaning: '두었다',
+          pronunciation: '/sɛt/',
+        },
+        {
+          word: 'clouds',
+          meaning: '구름',
+          pronunciation: '/klaʊdz/',
+        },
+        {
+          word: 'sign',
+          meaning: '표시, 표징',
+          pronunciation: '/saɪn/',
+        },
+      ],
     },
     {
       korean: '"이것은 내 약속이다. 다시는 이런 큰 홍수를 보내지 않으리라."',
       reference: 'Genesis 9:11',
-      easy: {
-        english: '"This is my promise: I will never send a great flood again."',
-        words: [
-          { word: 'promise', meaning: '약속', pronunciation: '/ˈprɒmɪs/' },
-          { word: 'never', meaning: '결코 ~않다', pronunciation: '/ˈnɛvər/' },
-          { word: 'flood', meaning: '홍수', pronunciation: '/flʌd/' },
-        ],
-      },
-      standard: {
-        english: '"This is my covenant: never again will a flood destroy all life on earth."',
-        words: [
-          { word: 'covenant', meaning: '언약', pronunciation: '/ˈkʌvənənt/' },
-          { word: 'destroy', meaning: '파괴하다', pronunciation: '/dɪˈstrɔɪ/' },
-        ],
-      },
+      english: '"This is my covenant: never again will a flood destroy all life on earth."',
+      words: [
+        {
+          word: 'covenant',
+          meaning: '언약',
+          pronunciation: '/ˈkʌvənənt/',
+        },
+        {
+          word: 'destroy',
+          meaning: '파괴하다',
+          pronunciation: '/dɪˈstrɔɪ/',
+        },
+      ],
     },
     {
       korean: '하늘에 무지개가 보일 때마다, 하나님의 약속을 기억해요.',
       reference: 'Genesis 9:14–15',
-      easy: {
-        english: 'Whenever a rainbow shines in the sky, we remember God\'s promise.',
-        words: [
-          { word: 'whenever', meaning: '~할 때마다', pronunciation: '/wɛnˈɛvər/' },
-          { word: 'shines', meaning: '빛난다', pronunciation: '/ʃaɪnz/' },
-          { word: 'remember', meaning: '기억하다', pronunciation: '/rɪˈmɛmbər/' },
-        ],
-      },
-      standard: {
-        english: 'Whenever the rainbow appears, it reminds us of the covenant between God and the earth.',
-        words: [
-          { word: 'appears', meaning: '나타난다', pronunciation: '/əˈpɪərz/' },
-          { word: 'reminds', meaning: '상기시킨다', pronunciation: '/rɪˈmaɪndz/' },
-        ],
-      },
+      english: 'Whenever the rainbow appears, it reminds us of the covenant between God and the earth.',
+      words: [
+        {
+          word: 'appears',
+          meaning: '나타난다',
+          pronunciation: '/əˈpɪərz/',
+        },
+        {
+          word: 'reminds',
+          meaning: '상기시킨다',
+          pronunciation: '/rɪˈmaɪndz/',
+        },
+      ],
     },
   ],
   quiz: [
     {
       question: '비둘기가 두 번째에 가지고 돌아온 것은?',
-      options: ['푸른 잎사귀', '돌멩이', '물고기', '아무것도 없음'],
+      options: [
+        '푸른 잎사귀',
+        '돌멩이',
+        '물고기',
+        '아무것도 없음',
+      ],
       correctIndex: 0,
       explanation: 'a green olive leaf — 푸른 올리브 잎. 물이 빠지고 땅에 식물이 다시 자라기 시작했다는 신호였어요.',
     },
     {
       question: '본문에서 "약속"을 의미하는 단어는?',
-      options: ['promise', 'rainbow', 'flood', 'mountain'],
+      options: [
+        'promise',
+        'rainbow',
+        'flood',
+        'mountain',
+      ],
       correctIndex: 0,
       explanation: 'promise — 약속. 보통(WEB)에서는 covenant(언약)이라는 더 깊은 단어를 써요.',
     },
@@ -1949,246 +2012,249 @@ export const jonahLesson1: Lesson = {
   description: '하나님이 가라고 한 도시 대신 반대 방향으로 도망친 요나. 폭풍과 큰 물고기.',
   estimatedMinutes: 5,
   source: {
-    easy: { label: 'Jonah 1, BBE — Public Domain', url: 'https://ebible.org/bbe/JON01.htm' },
-    standard: { label: 'Jonah 1, WEB — Public Domain', url: 'https://ebible.org/web/JON01.htm' },
+    label: 'Jonah 1, WEB — Public Domain',
+    url: 'https://ebible.org/web/JON01.htm',
   },
   sentences: [
     {
       korean: '먼 옛날에, 요나라는 사람이 있었어요.',
       reference: 'Jonah 1:1',
-      easy: {
-        english: 'Long ago, there was a man named Jonah.',
-        words: [
-          { word: 'long ago', meaning: '먼 옛날에', pronunciation: '/lɔːŋ əˈɡoʊ/' },
-          { word: 'named', meaning: '~라는 이름의', pronunciation: '/neɪmd/' },
-        ],
-      },
-      standard: {
-        english: 'In ancient times, there lived a prophet named Jonah.',
-        words: [
-          { word: 'ancient', meaning: '고대의, 옛날의', pronunciation: '/ˈeɪnʃənt/' },
-          { word: 'prophet', meaning: '선지자', pronunciation: '/ˈprɒfɪt/' },
-        ],
-      },
+      english: 'In ancient times, there lived a prophet named Jonah.',
+      words: [
+        {
+          word: 'ancient',
+          meaning: '고대의, 옛날의',
+          pronunciation: '/ˈeɪnʃənt/',
+        },
+        {
+          word: 'prophet',
+          meaning: '선지자',
+          pronunciation: '/ˈprɒfɪt/',
+        },
+      ],
     },
     {
       korean: '하나님이 요나에게 말씀하셨어요. "큰 도시 니느웨로 가라."',
       reference: 'Jonah 1:2',
-      easy: {
-        english: 'God said to Jonah, "Go to the great city of Nineveh."',
-        words: [
-          { word: 'great', meaning: '큰, 위대한', pronunciation: '/ɡreɪt/' },
-          { word: 'city', meaning: '도시', pronunciation: '/ˈsɪti/' },
-          { word: 'Nineveh', meaning: '니느웨 (큰 도시 이름)', pronunciation: '/ˈnɪnəvə/' },
-        ],
-      },
-      standard: {
-        english: 'The Lord said to Jonah, "Arise, go to the great city of Nineveh."',
-        words: [
-          { word: 'Lord', meaning: '주, 여호와', pronunciation: '/lɔːrd/' },
-          { word: 'arise', meaning: '일어나라', pronunciation: '/əˈraɪz/' },
-        ],
-      },
+      english: 'The Lord said to Jonah, "Arise, go to the great city of Nineveh."',
+      words: [
+        {
+          word: 'Lord',
+          meaning: '주, 여호와',
+          pronunciation: '/lɔːrd/',
+        },
+        {
+          word: 'arise',
+          meaning: '일어나라',
+          pronunciation: '/əˈraɪz/',
+        },
+      ],
     },
     {
       korean: '"그곳 사람들에게 나쁜 일을 그만두라고 전해라."',
       reference: 'Jonah 1:2',
-      easy: {
-        english: '"Tell the people there to stop doing bad things."',
-        words: [
-          { word: 'tell', meaning: '말해라', pronunciation: '/tɛl/' },
-          { word: 'people', meaning: '사람들', pronunciation: '/ˈpiːpəl/' },
-          { word: 'stop', meaning: '멈추다', pronunciation: '/stɒp/' },
-        ],
-      },
-      standard: {
-        english: '"Cry out against it, for their wickedness has come up before me."',
-        words: [
-          { word: 'cry out', meaning: '외치다', pronunciation: '/kraɪ aʊt/' },
-          { word: 'wickedness', meaning: '악함', pronunciation: '/ˈwɪkɪdnəs/' },
-        ],
-      },
+      english: '"Cry out against it, for their wickedness has come up before me."',
+      words: [
+        {
+          word: 'cry out',
+          meaning: '외치다',
+          pronunciation: '/kraɪ aʊt/',
+        },
+        {
+          word: 'wickedness',
+          meaning: '악함',
+          pronunciation: '/ˈwɪkɪdnəs/',
+        },
+      ],
     },
     {
       korean: '하지만 요나는 가고 싶지 않았어요. 하나님으로부터 도망쳤어요.',
       reference: 'Jonah 1:3',
-      easy: {
-        english: 'But Jonah did not want to go. He ran away from God.',
-        words: [
-          { word: 'want', meaning: '원하다', pronunciation: '/wɒnt/' },
-          { word: 'ran away', meaning: '도망쳤다', pronunciation: '/ræn əˈweɪ/' },
-        ],
-      },
-      standard: {
-        english: 'But Jonah refused, and tried to flee from the presence of the Lord.',
-        words: [
-          { word: 'refused', meaning: '거절했다', pronunciation: '/rɪˈfjuːzd/' },
-          { word: 'flee', meaning: '도망치다', pronunciation: '/fliː/' },
-          { word: 'presence', meaning: '계심, 임재', pronunciation: '/ˈprɛzəns/' },
-        ],
-      },
+      english: 'But Jonah refused, and tried to flee from the presence of the Lord.',
+      words: [
+        {
+          word: 'refused',
+          meaning: '거절했다',
+          pronunciation: '/rɪˈfjuːzd/',
+        },
+        {
+          word: 'flee',
+          meaning: '도망치다',
+          pronunciation: '/fliː/',
+        },
+        {
+          word: 'presence',
+          meaning: '계심, 임재',
+          pronunciation: '/ˈprɛzəns/',
+        },
+      ],
     },
     {
       korean: '바다로 가서 반대 방향으로 가는 배를 탔어요.',
       reference: 'Jonah 1:3',
-      easy: {
-        english: 'He went to the sea and got on a ship sailing the other way.',
-        words: [
-          { word: 'sea', meaning: '바다', pronunciation: '/siː/' },
-          { word: 'ship', meaning: '배', pronunciation: '/ʃɪp/' },
-          { word: 'other way', meaning: '반대 방향', pronunciation: '/ˈʌðər weɪ/' },
-        ],
-      },
-      standard: {
-        english: 'He went down to the harbor and boarded a ship sailing in the opposite direction.',
-        words: [
-          { word: 'harbor', meaning: '항구', pronunciation: '/ˈhɑːrbər/' },
-          { word: 'boarded', meaning: '탔다', pronunciation: '/ˈbɔːrdɪd/' },
-          { word: 'opposite', meaning: '반대의', pronunciation: '/ˈɒpəzɪt/' },
-        ],
-      },
+      english: 'He went down to the harbor and boarded a ship sailing in the opposite direction.',
+      words: [
+        {
+          word: 'harbor',
+          meaning: '항구',
+          pronunciation: '/ˈhɑːrbər/',
+        },
+        {
+          word: 'boarded',
+          meaning: '탔다',
+          pronunciation: '/ˈbɔːrdɪd/',
+        },
+        {
+          word: 'opposite',
+          meaning: '반대의',
+          pronunciation: '/ˈɒpəzɪt/',
+        },
+      ],
     },
     {
       korean: '요나가 잠자는 동안 큰 폭풍이 몰아쳤어요.',
       reference: 'Jonah 1:4–5',
-      easy: {
-        english: 'While Jonah was sleeping, a great storm came.',
-        words: [
-          { word: 'while', meaning: '~하는 동안', pronunciation: '/waɪl/' },
-          { word: 'sleeping', meaning: '잠자는', pronunciation: '/ˈsliːpɪŋ/' },
-          { word: 'storm', meaning: '폭풍', pronunciation: '/stɔːrm/' },
-        ],
-      },
-      standard: {
-        english: 'While Jonah slept below deck, a mighty storm arose on the sea.',
-        words: [
-          { word: 'below', meaning: '아래에', pronunciation: '/bɪˈloʊ/' },
-          { word: 'deck', meaning: '갑판', pronunciation: '/dɛk/' },
-          { word: 'mighty', meaning: '거대한, 강력한', pronunciation: '/ˈmaɪti/' },
-          { word: 'arose', meaning: '일어났다', pronunciation: '/əˈroʊz/' },
-        ],
-      },
+      english: 'While Jonah slept below deck, a mighty storm arose on the sea.',
+      words: [
+        {
+          word: 'below',
+          meaning: '아래에',
+          pronunciation: '/bɪˈloʊ/',
+        },
+        {
+          word: 'deck',
+          meaning: '갑판',
+          pronunciation: '/dɛk/',
+        },
+        {
+          word: 'mighty',
+          meaning: '거대한, 강력한',
+          pronunciation: '/ˈmaɪti/',
+        },
+        {
+          word: 'arose',
+          meaning: '일어났다',
+          pronunciation: '/əˈroʊz/',
+        },
+      ],
     },
     {
       korean: '바람이 강했어요. 파도가 매우 높았어요.',
       reference: 'Jonah 1:4',
-      easy: {
-        english: 'The wind was strong. The waves were very high.',
-        words: [
-          { word: 'wind', meaning: '바람', pronunciation: '/wɪnd/' },
-          { word: 'waves', meaning: '파도', pronunciation: '/weɪvz/' },
-          { word: 'high', meaning: '높은', pronunciation: '/haɪ/' },
-        ],
-      },
-      standard: {
-        english: 'The wind howled and the waves crashed against the ship.',
-        words: [
-          { word: 'howled', meaning: '울부짖었다', pronunciation: '/haʊld/' },
-          { word: 'crashed', meaning: '부딪혔다', pronunciation: '/kræʃt/' },
-        ],
-      },
+      english: 'The wind howled and the waves crashed against the ship.',
+      words: [
+        {
+          word: 'howled',
+          meaning: '울부짖었다',
+          pronunciation: '/haʊld/',
+        },
+        {
+          word: 'crashed',
+          meaning: '부딪혔다',
+          pronunciation: '/kræʃt/',
+        },
+      ],
     },
     {
       korean: '선원들은 두려웠어요. 배가 부서질 것 같았어요.',
       reference: 'Jonah 1:5',
-      easy: {
-        english: 'The sailors were afraid. They thought the ship would break.',
-        words: [
-          { word: 'sailors', meaning: '선원들', pronunciation: '/ˈseɪlərz/' },
-          { word: 'afraid', meaning: '두려워하는', pronunciation: '/əˈfreɪd/' },
-          { word: 'break', meaning: '부서지다', pronunciation: '/breɪk/' },
-        ],
-      },
-      standard: {
-        english: 'The sailors were terrified, thinking the ship would be torn apart.',
-        words: [
-          { word: 'terrified', meaning: '겁에 질린', pronunciation: '/ˈtɛrɪfaɪd/' },
-          { word: 'torn', meaning: '찢어진', pronunciation: '/tɔːrn/' },
-          { word: 'apart', meaning: '산산조각', pronunciation: '/əˈpɑːrt/' },
-        ],
-      },
+      english: 'The sailors were terrified, thinking the ship would be torn apart.',
+      words: [
+        {
+          word: 'terrified',
+          meaning: '겁에 질린',
+          pronunciation: '/ˈtɛrɪfaɪd/',
+        },
+        {
+          word: 'torn',
+          meaning: '찢어진',
+          pronunciation: '/tɔːrn/',
+        },
+        {
+          word: 'apart',
+          meaning: '산산조각',
+          pronunciation: '/əˈpɑːrt/',
+        },
+      ],
     },
     {
       korean: '그들은 요나를 깨워 물었어요. "당신이 무슨 짓을 한 건가요?"',
       reference: 'Jonah 1:6, 10',
-      easy: {
-        english: 'They woke Jonah and asked, "What have you done?"',
-        words: [
-          { word: 'woke', meaning: '깨웠다 (wake의 과거형)', pronunciation: '/woʊk/' },
-          { word: 'asked', meaning: '물었다', pronunciation: '/æskt/' },
-          { word: 'done', meaning: '했다 (do의 과거분사)', pronunciation: '/dʌn/' },
-        ],
-      },
-      standard: {
-        english: 'They awakened Jonah and demanded, "What have you done?"',
-        words: [
-          { word: 'awakened', meaning: '깨웠다', pronunciation: '/əˈweɪkənd/' },
-          { word: 'demanded', meaning: '강하게 물었다', pronunciation: '/dɪˈmændɪd/' },
-        ],
-      },
+      english: 'They awakened Jonah and demanded, "What have you done?"',
+      words: [
+        {
+          word: 'awakened',
+          meaning: '깨웠다',
+          pronunciation: '/əˈweɪkənd/',
+        },
+        {
+          word: 'demanded',
+          meaning: '강하게 물었다',
+          pronunciation: '/dɪˈmændɪd/',
+        },
+      ],
     },
     {
       korean: '요나가 말했어요. "내가 하나님으로부터 도망치고 있어요. 나를 바다에 던지세요."',
       reference: 'Jonah 1:12',
-      easy: {
-        english: 'Jonah said, "I am running from God. Throw me into the sea."',
-        words: [
-          { word: 'running', meaning: '도망치는', pronunciation: '/ˈrʌnɪŋ/' },
-          { word: 'throw', meaning: '던지다', pronunciation: '/θroʊ/' },
-          { word: 'into', meaning: '~안으로', pronunciation: '/ˈɪntuː/' },
-        ],
-      },
-      standard: {
-        english: 'Jonah said, "I am fleeing from the Lord. Throw me into the sea, and it will calm down."',
-        words: [
-          { word: 'fleeing', meaning: '도망치는 중', pronunciation: '/ˈfliːɪŋ/' },
-          { word: 'calm', meaning: '잔잔해지다', pronunciation: '/kɑːm/' },
-        ],
-      },
+      english: 'Jonah said, "I am fleeing from the Lord. Throw me into the sea, and it will calm down."',
+      words: [
+        {
+          word: 'fleeing',
+          meaning: '도망치는 중',
+          pronunciation: '/ˈfliːɪŋ/',
+        },
+        {
+          word: 'calm',
+          meaning: '잔잔해지다',
+          pronunciation: '/kɑːm/',
+        },
+      ],
     },
     {
       korean: '그들이 요나를 바다에 던지자, 곧 폭풍이 멈추었어요.',
       reference: 'Jonah 1:15',
-      easy: {
-        english: 'They threw Jonah into the sea. At once, the storm stopped.',
-        words: [
-          { word: 'threw', meaning: '던졌다 (throw의 과거형)', pronunciation: '/θruː/' },
-          { word: 'at once', meaning: '곧, 즉시', pronunciation: '/æt wʌns/' },
-        ],
-      },
-      standard: {
-        english: 'They threw Jonah into the sea, and at once, the raging storm grew calm.',
-        words: [
-          { word: 'raging', meaning: '맹렬한', pronunciation: '/ˈreɪdʒɪŋ/' },
-          { word: 'grew', meaning: '~해졌다', pronunciation: '/ɡruː/' },
-        ],
-      },
+      english: 'They threw Jonah into the sea, and at once, the raging storm grew calm.',
+      words: [
+        {
+          word: 'raging',
+          meaning: '맹렬한',
+          pronunciation: '/ˈreɪdʒɪŋ/',
+        },
+        {
+          word: 'grew',
+          meaning: '~해졌다',
+          pronunciation: '/ɡruː/',
+        },
+      ],
     },
     {
       korean: '하지만 하나님이 큰 물고기를 보내 요나를 삼켜서 그를 안전히 지켜주셨어요.',
       reference: 'Jonah 1:17',
-      easy: {
-        english: 'But God sent a big fish to swallow Jonah and keep him safe.',
-        words: [
-          { word: 'big fish', meaning: '큰 물고기', pronunciation: '/bɪɡ fɪʃ/' },
-          { word: 'swallow', meaning: '삼키다', pronunciation: '/ˈswɒloʊ/' },
-          { word: 'keep', meaning: '지키다', pronunciation: '/kiːp/' },
-          { word: 'safe', meaning: '안전한', pronunciation: '/seɪf/' },
-        ],
-      },
-      standard: {
-        english: 'But the Lord prepared a great fish to swallow Jonah and protect him.',
-        words: [
-          { word: 'prepared', meaning: '준비하셨다', pronunciation: '/prɪˈpɛərd/' },
-          { word: 'protect', meaning: '보호하다', pronunciation: '/prəˈtɛkt/' },
-        ],
-      },
+      english: 'But the Lord prepared a great fish to swallow Jonah and protect him.',
+      words: [
+        {
+          word: 'prepared',
+          meaning: '준비하셨다',
+          pronunciation: '/prɪˈpɛərd/',
+        },
+        {
+          word: 'protect',
+          meaning: '보호하다',
+          pronunciation: '/prəˈtɛkt/',
+        },
+      ],
     },
   ],
   quiz: [
     {
       question: '하나님이 요나에게 가라고 한 도시는?',
-      options: ['니느웨', '예루살렘', '베들레헴', '가버나움'],
+      options: [
+        '니느웨',
+        '예루살렘',
+        '베들레헴',
+        '가버나움',
+      ],
       correctIndex: 0,
       explanation: 'Nineveh — 큰 도시 니느웨. 요나는 가기 싫어 반대 방향으로 도망쳤어요.',
     },
@@ -2205,7 +2271,12 @@ export const jonahLesson1: Lesson = {
     },
     {
       question: '본문에서 "삼키다"를 의미하는 단어는?',
-      options: ['swallow', 'swim', 'sleep', 'stop'],
+      options: [
+        'swallow',
+        'swim',
+        'sleep',
+        'stop',
+      ],
       correctIndex: 0,
       explanation: 'swallow — 삼키다. 큰 물고기가 요나를 삼켜 그를 죽음에서 보호했어요.',
     },
@@ -2221,237 +2292,219 @@ export const jonahLesson2: Lesson = {
   description: '물고기 뱃속에서 기도하는 요나. 도시 전체가 변하는 놀라운 장면.',
   estimatedMinutes: 5,
   source: {
-    easy: { label: 'Jonah 2–3, BBE — Public Domain', url: 'https://ebible.org/bbe/JON02.htm' },
-    standard: { label: 'Jonah 2–3, WEB — Public Domain', url: 'https://ebible.org/web/JON02.htm' },
+    label: 'Jonah 2–3, WEB — Public Domain',
+    url: 'https://ebible.org/web/JON02.htm',
   },
   sentences: [
     {
       korean: '요나는 큰 물고기 뱃속에서 삼일 밤낮을 보냈어요.',
       reference: 'Jonah 1:17',
-      easy: {
-        english: 'Jonah was inside the big fish for three days and three nights.',
-        words: [
-          { word: 'inside', meaning: '안에', pronunciation: '/ɪnˈsaɪd/' },
-          { word: 'three days', meaning: '삼 일', pronunciation: '/θriː deɪz/' },
-          { word: 'nights', meaning: '밤들', pronunciation: '/naɪts/' },
-        ],
-      },
-      standard: {
-        english: 'Jonah remained in the belly of the great fish for three days and three nights.',
-        words: [
-          { word: 'remained', meaning: '머물렀다', pronunciation: '/rɪˈmeɪnd/' },
-          { word: 'belly', meaning: '뱃속', pronunciation: '/ˈbɛli/' },
-        ],
-      },
+      english: 'Jonah remained in the belly of the great fish for three days and three nights.',
+      words: [
+        {
+          word: 'remained',
+          meaning: '머물렀다',
+          pronunciation: '/rɪˈmeɪnd/',
+        },
+        {
+          word: 'belly',
+          meaning: '뱃속',
+          pronunciation: '/ˈbɛli/',
+        },
+      ],
     },
     {
       korean: '물고기의 어두운 뱃속에서, 요나는 하나님께 기도했어요.',
       reference: 'Jonah 2:1',
-      easy: {
-        english: 'In the dark belly of the fish, Jonah prayed to God.',
-        words: [
-          { word: 'dark', meaning: '어두운', pronunciation: '/dɑːrk/' },
-          { word: 'belly', meaning: '뱃속', pronunciation: '/ˈbɛli/' },
-          { word: 'prayed', meaning: '기도했다', pronunciation: '/preɪd/' },
-        ],
-      },
-      standard: {
-        english: 'From inside the fish, Jonah cried out to the Lord his God.',
-        words: [
-          { word: 'cried out', meaning: '부르짖었다', pronunciation: '/kraɪd aʊt/' },
-        ],
-      },
+      english: 'From inside the fish, Jonah cried out to the Lord his God.',
+      words: [
+        {
+          word: 'cried out',
+          meaning: '부르짖었다',
+          pronunciation: '/kraɪd aʊt/',
+        },
+      ],
     },
     {
       korean: '"제가 어려울 때 당신을 불렀고, 당신은 제 소리를 들으셨어요."',
       reference: 'Jonah 2:2',
-      easy: {
-        english: '"I called to you in my trouble, and you heard me."',
-        words: [
-          { word: 'called', meaning: '불렀다', pronunciation: '/kɔːld/' },
-          { word: 'trouble', meaning: '어려움', pronunciation: '/ˈtrʌbəl/' },
-          { word: 'heard', meaning: '들었다', pronunciation: '/hɜːrd/' },
-        ],
-      },
-      standard: {
-        english: '"In my distress I called to the Lord, and he answered me."',
-        words: [
-          { word: 'distress', meaning: '고통, 곤경', pronunciation: '/dɪˈstrɛs/' },
-          { word: 'answered', meaning: '응답하셨다', pronunciation: '/ˈænsərd/' },
-        ],
-      },
+      english: '"In my distress I called to the Lord, and he answered me."',
+      words: [
+        {
+          word: 'distress',
+          meaning: '고통, 곤경',
+          pronunciation: '/dɪˈstrɛs/',
+        },
+        {
+          word: 'answered',
+          meaning: '응답하셨다',
+          pronunciation: '/ˈænsərd/',
+        },
+      ],
     },
     {
       korean: '"잘못했어요. 이제 당신 말씀대로 하겠어요."',
       reference: 'Jonah 2:9',
-      easy: {
-        english: '"I am sorry. I will do what you say."',
-        words: [
-          { word: 'sorry', meaning: '미안한', pronunciation: '/ˈsɒri/' },
-          { word: 'say', meaning: '말하다', pronunciation: '/seɪ/' },
-        ],
-      },
-      standard: {
-        english: '"I will keep my promise to you, O Lord."',
-        words: [
-          { word: 'keep', meaning: '지키다', pronunciation: '/kiːp/' },
-          { word: 'promise', meaning: '약속', pronunciation: '/ˈprɒmɪs/' },
-        ],
-      },
+      english: '"I will keep my promise to you, O Lord."',
+      words: [
+        {
+          word: 'keep',
+          meaning: '지키다',
+          pronunciation: '/kiːp/',
+        },
+        {
+          word: 'promise',
+          meaning: '약속',
+          pronunciation: '/ˈprɒmɪs/',
+        },
+      ],
     },
     {
       korean: '그러자 하나님이 물고기에게 말씀하셨고, 물고기가 요나를 마른 땅에 토해냈어요.',
       reference: 'Jonah 2:10',
-      easy: {
-        english: 'Then God spoke to the fish, and the fish spit Jonah out onto the dry land.',
-        words: [
-          { word: 'spoke', meaning: '말씀하셨다', pronunciation: '/spoʊk/' },
-          { word: 'spit', meaning: '뱉었다', pronunciation: '/spɪt/' },
-          { word: 'dry land', meaning: '마른 땅', pronunciation: '/draɪ lænd/' },
-        ],
-      },
-      standard: {
-        english: 'Then the Lord commanded the fish, and it spit Jonah out onto the dry land.',
-        words: [
-          { word: 'commanded', meaning: '명령하셨다', pronunciation: '/kəˈmændɪd/' },
-        ],
-      },
+      english: 'Then the Lord commanded the fish, and it spit Jonah out onto the dry land.',
+      words: [
+        {
+          word: 'commanded',
+          meaning: '명령하셨다',
+          pronunciation: '/kəˈmændɪd/',
+        },
+      ],
     },
     {
       korean: '하나님이 다시 요나에게 말씀하셨어요. "큰 도시 니느웨로 가라."',
       reference: 'Jonah 3:1–2',
-      easy: {
-        english: 'Again God said to Jonah, "Go to the great city of Nineveh."',
-        words: [
-          { word: 'again', meaning: '다시', pronunciation: '/əˈɡɛn/' },
-          { word: 'great', meaning: '큰', pronunciation: '/ɡreɪt/' },
-        ],
-      },
-      standard: {
-        english: 'A second time, the Lord said to Jonah, "Arise, go to Nineveh, that great city."',
-        words: [
-          { word: 'second', meaning: '두 번째', pronunciation: '/ˈsɛkənd/' },
-          { word: 'arise', meaning: '일어나라', pronunciation: '/əˈraɪz/' },
-        ],
-      },
+      english: 'A second time, the Lord said to Jonah, "Arise, go to Nineveh, that great city."',
+      words: [
+        {
+          word: 'second',
+          meaning: '두 번째',
+          pronunciation: '/ˈsɛkənd/',
+        },
+        {
+          word: 'arise',
+          meaning: '일어나라',
+          pronunciation: '/əˈraɪz/',
+        },
+      ],
     },
     {
       korean: '이번에는 요나가 갔어요.',
       reference: 'Jonah 3:3',
-      easy: {
-        english: 'This time, Jonah went.',
-        words: [
-          { word: 'this time', meaning: '이번에는', pronunciation: '/ðɪs taɪm/' },
-          { word: 'went', meaning: '갔다 (go의 과거형)', pronunciation: '/wɛnt/' },
-        ],
-      },
-      standard: {
-        english: 'This time, Jonah obeyed and went to Nineveh.',
-        words: [
-          { word: 'obeyed', meaning: '순종했다', pronunciation: '/oʊˈbeɪd/' },
-        ],
-      },
+      english: 'This time, Jonah obeyed and went to Nineveh.',
+      words: [
+        {
+          word: 'obeyed',
+          meaning: '순종했다',
+          pronunciation: '/oʊˈbeɪd/',
+        },
+      ],
     },
     {
       korean: '그는 도시 안으로 들어가 외쳤어요. "사십 일 후에 이 도시는 멸망할 것이다!"',
       reference: 'Jonah 3:4',
-      easy: {
-        english: 'He walked into the city and shouted, "In forty days, this city will be destroyed!"',
-        words: [
-          { word: 'walked', meaning: '걸었다', pronunciation: '/wɔːkt/' },
-          { word: 'shouted', meaning: '외쳤다', pronunciation: '/ˈʃaʊtɪd/' },
-          { word: 'destroyed', meaning: '멸망될', pronunciation: '/dɪˈstrɔɪd/' },
-        ],
-      },
-      standard: {
-        english: 'He proclaimed throughout the city, "In forty days, Nineveh will be overthrown!"',
-        words: [
-          { word: 'proclaimed', meaning: '선포했다', pronunciation: '/prəˈkleɪmd/' },
-          { word: 'overthrown', meaning: '뒤집힐, 멸망할', pronunciation: '/ˌoʊvərˈθroʊn/' },
-        ],
-      },
+      english: 'He proclaimed throughout the city, "In forty days, Nineveh will be overthrown!"',
+      words: [
+        {
+          word: 'proclaimed',
+          meaning: '선포했다',
+          pronunciation: '/prəˈkleɪmd/',
+        },
+        {
+          word: 'overthrown',
+          meaning: '뒤집힐, 멸망할',
+          pronunciation: '/ˌoʊvərˈθroʊn/',
+        },
+      ],
     },
     {
       korean: '니느웨 사람들은 요나의 말을 듣고 두려워했어요.',
       reference: 'Jonah 3:5',
-      easy: {
-        english: 'The people of Nineveh heard Jonah and were afraid.',
-        words: [
-          { word: 'heard', meaning: '들었다', pronunciation: '/hɜːrd/' },
-          { word: 'afraid', meaning: '두려워하는', pronunciation: '/əˈfreɪd/' },
-        ],
-      },
-      standard: {
-        english: 'The people of Nineveh believed Jonah\'s message and trembled.',
-        words: [
-          { word: 'believed', meaning: '믿었다', pronunciation: '/bɪˈliːvd/' },
-          { word: 'message', meaning: '메시지', pronunciation: '/ˈmɛsɪdʒ/' },
-          { word: 'trembled', meaning: '떨었다', pronunciation: '/ˈtrɛmbəld/' },
-        ],
-      },
+      english: "The people of Nineveh believed Jonah's message and trembled.",
+      words: [
+        {
+          word: 'believed',
+          meaning: '믿었다',
+          pronunciation: '/bɪˈliːvd/',
+        },
+        {
+          word: 'message',
+          meaning: '메시지',
+          pronunciation: '/ˈmɛsɪdʒ/',
+        },
+        {
+          word: 'trembled',
+          meaning: '떨었다',
+          pronunciation: '/ˈtrɛmbəld/',
+        },
+      ],
     },
     {
       korean: '심지어 왕도 자기 왕좌에서 내려왔어요.',
       reference: 'Jonah 3:6',
-      easy: {
-        english: 'Even the king got down from his throne.',
-        words: [
-          { word: 'even', meaning: '심지어', pronunciation: '/ˈiːvən/' },
-          { word: 'king', meaning: '왕', pronunciation: '/kɪŋ/' },
-          { word: 'throne', meaning: '왕좌', pronunciation: '/θroʊn/' },
-        ],
-      },
-      standard: {
-        english: 'Even the king rose from his throne and humbled himself.',
-        words: [
-          { word: 'rose', meaning: '일어섰다', pronunciation: '/roʊz/' },
-          { word: 'humbled', meaning: '겸손하게 했다', pronunciation: '/ˈhʌmbəld/' },
-        ],
-      },
+      english: 'Even the king rose from his throne and humbled himself.',
+      words: [
+        {
+          word: 'rose',
+          meaning: '일어섰다',
+          pronunciation: '/roʊz/',
+        },
+        {
+          word: 'humbled',
+          meaning: '겸손하게 했다',
+          pronunciation: '/ˈhʌmbəld/',
+        },
+      ],
     },
     {
       korean: '모두가 자신의 잘못을 하나님께 회개했어요.',
       reference: 'Jonah 3:7–8',
-      easy: {
-        english: 'Everyone said sorry to God for the bad things they had done.',
-        words: [
-          { word: 'everyone', meaning: '모두', pronunciation: '/ˈɛvriwʌn/' },
-          { word: 'sorry', meaning: '미안한', pronunciation: '/ˈsɒri/' },
-        ],
-      },
-      standard: {
-        english: 'Everyone repented and turned away from their evil ways.',
-        words: [
-          { word: 'repented', meaning: '회개했다', pronunciation: '/rɪˈpɛntɪd/' },
-          { word: 'turned away', meaning: '돌이켰다', pronunciation: '/tɜːrnd əˈweɪ/' },
-          { word: 'evil', meaning: '악한', pronunciation: '/ˈiːvəl/' },
-        ],
-      },
+      english: 'Everyone repented and turned away from their evil ways.',
+      words: [
+        {
+          word: 'repented',
+          meaning: '회개했다',
+          pronunciation: '/rɪˈpɛntɪd/',
+        },
+        {
+          word: 'turned away',
+          meaning: '돌이켰다',
+          pronunciation: '/tɜːrnd əˈweɪ/',
+        },
+        {
+          word: 'evil',
+          meaning: '악한',
+          pronunciation: '/ˈiːvəl/',
+        },
+      ],
     },
     {
       korean: '하나님은 그들이 변한 것을 보시고 도시를 멸망시키지 않으셨어요.',
       reference: 'Jonah 3:10',
-      easy: {
-        english: 'God saw that they had changed. He did not destroy the city.',
-        words: [
-          { word: 'saw', meaning: '보았다', pronunciation: '/sɔː/' },
-          { word: 'changed', meaning: '변했다', pronunciation: '/tʃeɪndʒd/' },
-          { word: 'destroy', meaning: '멸망시키다', pronunciation: '/dɪˈstrɔɪ/' },
-        ],
-      },
-      standard: {
-        english: 'When God saw what they had done, he relented and spared the city.',
-        words: [
-          { word: 'relented', meaning: '뜻을 돌이키셨다', pronunciation: '/rɪˈlɛntɪd/' },
-          { word: 'spared', meaning: '살려두셨다', pronunciation: '/spɛərd/' },
-        ],
-      },
+      english: 'When God saw what they had done, he relented and spared the city.',
+      words: [
+        {
+          word: 'relented',
+          meaning: '뜻을 돌이키셨다',
+          pronunciation: '/rɪˈlɛntɪd/',
+        },
+        {
+          word: 'spared',
+          meaning: '살려두셨다',
+          pronunciation: '/spɛərd/',
+        },
+      ],
     },
   ],
   quiz: [
     {
       question: '요나는 물고기 뱃속에서 며칠 있었나요?',
-      options: ['3일', '7일', '40일', '1일'],
+      options: [
+        '3일',
+        '7일',
+        '40일',
+        '1일',
+      ],
       correctIndex: 0,
       explanation: 'three days and three nights — 삼 일 밤낮. 요나는 물고기 뱃속에서 하나님께 기도했어요.',
     },
@@ -2489,232 +2542,223 @@ export const jonahLesson3: Lesson = {
   description: '하나님이 도시를 살려주신 것에 화가 난 요나. 박넝쿨 식물이 알려주는 메시지.',
   estimatedMinutes: 5,
   source: {
-    easy: { label: 'Jonah 4, BBE — Public Domain', url: 'https://ebible.org/bbe/JON04.htm' },
-    standard: { label: 'Jonah 4, WEB — Public Domain', url: 'https://ebible.org/web/JON04.htm' },
+    label: 'Jonah 4, WEB — Public Domain',
+    url: 'https://ebible.org/web/JON04.htm',
   },
   sentences: [
     {
       korean: '하지만 요나는 기뻐하지 않았어요. 그는 매우 화가 났어요.',
       reference: 'Jonah 4:1',
-      easy: {
-        english: 'But Jonah was not happy. He was very angry.',
-        words: [
-          { word: 'happy', meaning: '기쁜', pronunciation: '/ˈhæpi/' },
-          { word: 'angry', meaning: '화난', pronunciation: '/ˈæŋɡri/' },
-        ],
-      },
-      standard: {
-        english: 'But Jonah was deeply displeased and became furious.',
-        words: [
-          { word: 'displeased', meaning: '불쾌한, 못마땅한', pronunciation: '/dɪsˈpliːzd/' },
-          { word: 'furious', meaning: '몹시 화난', pronunciation: '/ˈfjʊəriəs/' },
-        ],
-      },
+      english: 'But Jonah was deeply displeased and became furious.',
+      words: [
+        {
+          word: 'displeased',
+          meaning: '불쾌한, 못마땅한',
+          pronunciation: '/dɪsˈpliːzd/',
+        },
+        {
+          word: 'furious',
+          meaning: '몹시 화난',
+          pronunciation: '/ˈfjʊəriəs/',
+        },
+      ],
     },
     {
       korean: '요나가 하나님께 말했어요. "왜 이 사람들을 용서하셨나요?"',
       reference: 'Jonah 4:2',
-      easy: {
-        english: 'He said to God, "Why did you forgive these people?"',
-        words: [
-          { word: 'forgive', meaning: '용서하다', pronunciation: '/fərˈɡɪv/' },
-          { word: 'these', meaning: '이', pronunciation: '/ðiːz/' },
-        ],
-      },
-      standard: {
-        english: 'He prayed, "Lord, why did you show mercy to these people?"',
-        words: [
-          { word: 'mercy', meaning: '자비', pronunciation: '/ˈmɜːrsi/' },
-        ],
-      },
+      english: 'He prayed, "Lord, why did you show mercy to these people?"',
+      words: [
+        {
+          word: 'mercy',
+          meaning: '자비',
+          pronunciation: '/ˈmɜːrsi/',
+        },
+      ],
     },
     {
       korean: '"이렇게 하실 줄 알았어요. 그래서 도망친 거예요."',
       reference: 'Jonah 4:2',
-      easy: {
-        english: '"I knew you would. That\'s why I ran away."',
-        words: [
-          { word: 'knew', meaning: '알았다 (know의 과거형)', pronunciation: '/njuː/' },
-          { word: "that's why", meaning: '그래서', pronunciation: '/ðæts waɪ/' },
-        ],
-      },
-      standard: {
-        english: '"I knew you were merciful, and that is why I tried to flee."',
-        words: [
-          { word: 'merciful', meaning: '자비로운', pronunciation: '/ˈmɜːrsɪfəl/' },
-          { word: 'flee', meaning: '도망치다', pronunciation: '/fliː/' },
-        ],
-      },
+      english: '"I knew you were merciful, and that is why I tried to flee."',
+      words: [
+        {
+          word: 'merciful',
+          meaning: '자비로운',
+          pronunciation: '/ˈmɜːrsɪfəl/',
+        },
+        {
+          word: 'flee',
+          meaning: '도망치다',
+          pronunciation: '/fliː/',
+        },
+      ],
     },
     {
       korean: '요나는 도시를 나와 앉아 기다렸어요.',
       reference: 'Jonah 4:5',
-      easy: {
-        english: 'Jonah went out of the city and sat down to wait.',
-        words: [
-          { word: 'went out', meaning: '나갔다', pronunciation: '/wɛnt aʊt/' },
-          { word: 'sat down', meaning: '앉았다', pronunciation: '/sæt daʊn/' },
-          { word: 'wait', meaning: '기다리다', pronunciation: '/weɪt/' },
-        ],
-      },
-      standard: {
-        english: 'Jonah left the city, sat east of it, and waited to see what would happen.',
-        words: [
-          { word: 'east', meaning: '동쪽', pronunciation: '/iːst/' },
-          { word: 'happen', meaning: '일어나다', pronunciation: '/ˈhæpən/' },
-        ],
-      },
+      english: 'Jonah left the city, sat east of it, and waited to see what would happen.',
+      words: [
+        {
+          word: 'east',
+          meaning: '동쪽',
+          pronunciation: '/iːst/',
+        },
+        {
+          word: 'happen',
+          meaning: '일어나다',
+          pronunciation: '/ˈhæpən/',
+        },
+      ],
     },
     {
       korean: '햇볕이 뜨거웠고, 요나는 지쳤어요.',
       reference: 'Jonah 4:6, 8',
-      easy: {
-        english: 'The sun was hot, and Jonah was tired.',
-        words: [
-          { word: 'sun', meaning: '해, 햇볕', pronunciation: '/sʌn/' },
-          { word: 'hot', meaning: '뜨거운', pronunciation: '/hɒt/' },
-          { word: 'tired', meaning: '지친', pronunciation: '/ˈtaɪərd/' },
-        ],
-      },
-      standard: {
-        english: 'The sun was burning, and Jonah grew weary.',
-        words: [
-          { word: 'burning', meaning: '타는 듯한', pronunciation: '/ˈbɜːrnɪŋ/' },
-          { word: 'weary', meaning: '지친, 피곤한', pronunciation: '/ˈwɪəri/' },
-        ],
-      },
+      english: 'The sun was burning, and Jonah grew weary.',
+      words: [
+        {
+          word: 'burning',
+          meaning: '타는 듯한',
+          pronunciation: '/ˈbɜːrnɪŋ/',
+        },
+        {
+          word: 'weary',
+          meaning: '지친, 피곤한',
+          pronunciation: '/ˈwɪəri/',
+        },
+      ],
     },
     {
       korean: '하나님이 요나 위로 잎이 무성한 식물을 자라게 해 그늘을 만들어주셨어요.',
       reference: 'Jonah 4:6',
-      easy: {
-        english: 'God grew a leafy plant over Jonah to give him shade.',
-        words: [
-          { word: 'grew', meaning: '자라게 하셨다', pronunciation: '/ɡruː/' },
-          { word: 'leafy', meaning: '잎이 무성한', pronunciation: '/ˈliːfi/' },
-          { word: 'plant', meaning: '식물', pronunciation: '/plænt/' },
-          { word: 'shade', meaning: '그늘', pronunciation: '/ʃeɪd/' },
-        ],
-      },
-      standard: {
-        english: 'The Lord caused a leafy vine to grow over Jonah, providing shade above his head.',
-        words: [
-          { word: 'caused', meaning: '하게 하셨다', pronunciation: '/kɔːzd/' },
-          { word: 'vine', meaning: '덩굴', pronunciation: '/vaɪn/' },
-          { word: 'providing', meaning: '제공하는', pronunciation: '/prəˈvaɪdɪŋ/' },
-        ],
-      },
+      english: 'The Lord caused a leafy vine to grow over Jonah, providing shade above his head.',
+      words: [
+        {
+          word: 'caused',
+          meaning: '하게 하셨다',
+          pronunciation: '/kɔːzd/',
+        },
+        {
+          word: 'vine',
+          meaning: '덩굴',
+          pronunciation: '/vaɪn/',
+        },
+        {
+          word: 'providing',
+          meaning: '제공하는',
+          pronunciation: '/prəˈvaɪdɪŋ/',
+        },
+      ],
     },
     {
       korean: '요나는 그 식물이 매우 기뻤어요.',
       reference: 'Jonah 4:6',
-      easy: {
-        english: 'Jonah was very glad about the plant.',
-        words: [
-          { word: 'glad', meaning: '기쁜', pronunciation: '/ɡlæd/' },
-        ],
-      },
-      standard: {
-        english: 'Jonah was overjoyed by the cool shade of the vine.',
-        words: [
-          { word: 'overjoyed', meaning: '아주 기쁜', pronunciation: '/ˌoʊvərˈdʒɔɪd/' },
-          { word: 'cool', meaning: '시원한', pronunciation: '/kuːl/' },
-        ],
-      },
+      english: 'Jonah was overjoyed by the cool shade of the vine.',
+      words: [
+        {
+          word: 'overjoyed',
+          meaning: '아주 기쁜',
+          pronunciation: '/ˌoʊvərˈdʒɔɪd/',
+        },
+        {
+          word: 'cool',
+          meaning: '시원한',
+          pronunciation: '/kuːl/',
+        },
+      ],
     },
     {
       korean: '하지만 다음 날 아침, 그 식물이 죽었어요.',
       reference: 'Jonah 4:7',
-      easy: {
-        english: 'But the next morning, the plant died.',
-        words: [
-          { word: 'next', meaning: '다음의', pronunciation: '/nɛkst/' },
-          { word: 'morning', meaning: '아침', pronunciation: '/ˈmɔːrnɪŋ/' },
-          { word: 'died', meaning: '죽었다', pronunciation: '/daɪd/' },
-        ],
-      },
-      standard: {
-        english: 'But the next morning, a worm attacked the vine and it withered.',
-        words: [
-          { word: 'worm', meaning: '벌레', pronunciation: '/wɜːrm/' },
-          { word: 'attacked', meaning: '공격했다', pronunciation: '/əˈtækt/' },
-          { word: 'withered', meaning: '시들었다', pronunciation: '/ˈwɪðərd/' },
-        ],
-      },
+      english: 'But the next morning, a worm attacked the vine and it withered.',
+      words: [
+        {
+          word: 'worm',
+          meaning: '벌레',
+          pronunciation: '/wɜːrm/',
+        },
+        {
+          word: 'attacked',
+          meaning: '공격했다',
+          pronunciation: '/əˈtækt/',
+        },
+        {
+          word: 'withered',
+          meaning: '시들었다',
+          pronunciation: '/ˈwɪðərd/',
+        },
+      ],
     },
     {
       korean: '뜨거운 햇볕과 바람에 요나는 지치고 힘들어졌어요.',
       reference: 'Jonah 4:8',
-      easy: {
-        english: 'The hot sun and wind made Jonah feel sick.',
-        words: [
-          { word: 'wind', meaning: '바람', pronunciation: '/wɪnd/' },
-          { word: 'feel sick', meaning: '아프게 느끼다', pronunciation: '/fiːl sɪk/' },
-        ],
-      },
-      standard: {
-        english: 'A scorching east wind blew, and Jonah grew faint under the burning sun.',
-        words: [
-          { word: 'scorching', meaning: '타는 듯한', pronunciation: '/ˈskɔːrtʃɪŋ/' },
-          { word: 'faint', meaning: '기절할 듯한', pronunciation: '/feɪnt/' },
-        ],
-      },
+      english: 'A scorching east wind blew, and Jonah grew faint under the burning sun.',
+      words: [
+        {
+          word: 'scorching',
+          meaning: '타는 듯한',
+          pronunciation: '/ˈskɔːrtʃɪŋ/',
+        },
+        {
+          word: 'faint',
+          meaning: '기절할 듯한',
+          pronunciation: '/feɪnt/',
+        },
+      ],
     },
     {
       korean: '요나가 말했어요. "사느니 차라리 죽는 게 낫겠어요."',
       reference: 'Jonah 4:8',
-      easy: {
-        english: 'Jonah said, "It is better for me to die than to live."',
-        words: [
-          { word: 'better', meaning: '더 나은', pronunciation: '/ˈbɛtər/' },
-          { word: 'die', meaning: '죽다', pronunciation: '/daɪ/' },
-          { word: 'live', meaning: '살다', pronunciation: '/lɪv/' },
-        ],
-      },
-      standard: {
-        english: 'Jonah said, "It would be better for me to die than to keep living."',
-        words: [
-          { word: 'would', meaning: '~할 것이다 (가정)', pronunciation: '/wʊd/' },
-          { word: 'living', meaning: '사는 것', pronunciation: '/ˈlɪvɪŋ/' },
-        ],
-      },
+      english: 'Jonah said, "It would be better for me to die than to keep living."',
+      words: [
+        {
+          word: 'would',
+          meaning: '~할 것이다 (가정)',
+          pronunciation: '/wʊd/',
+        },
+        {
+          word: 'living',
+          meaning: '사는 것',
+          pronunciation: '/ˈlɪvɪŋ/',
+        },
+      ],
     },
     {
       korean: '하나님이 말씀하셨어요. "너는 식물 하나로 슬퍼하는구나. 하루 만에 자라 하루 만에 죽은 식물 때문에."',
       reference: 'Jonah 4:10',
-      easy: {
-        english: 'God said, "You feel sad about a plant. It grew in one day and died in one day."',
-        words: [
-          { word: 'feel sad', meaning: '슬프게 느끼다', pronunciation: '/fiːl sæd/' },
-          { word: 'one day', meaning: '하루', pronunciation: '/wʌn deɪ/' },
-        ],
-      },
-      standard: {
-        english: 'God said, "You care about a vine that you did not plant or tend, that grew in a night and perished in a night."',
-        words: [
-          { word: 'care', meaning: '신경 쓰다', pronunciation: '/kɛər/' },
-          { word: 'tend', meaning: '돌보다', pronunciation: '/tɛnd/' },
-          { word: 'perished', meaning: '죽었다, 사라졌다', pronunciation: '/ˈpɛrɪʃt/' },
-        ],
-      },
+      english: 'God said, "You care about a vine that you did not plant or tend, that grew in a night and perished in a night."',
+      words: [
+        {
+          word: 'care',
+          meaning: '신경 쓰다',
+          pronunciation: '/kɛər/',
+        },
+        {
+          word: 'tend',
+          meaning: '돌보다',
+          pronunciation: '/tɛnd/',
+        },
+        {
+          word: 'perished',
+          meaning: '죽었다, 사라졌다',
+          pronunciation: '/ˈpɛrɪʃt/',
+        },
+      ],
     },
     {
       korean: '"그럼 사람들이 가득한 이 큰 도시를 내가 슬퍼하는 것이 마땅하지 않겠느냐?"',
       reference: 'Jonah 4:11',
-      easy: {
-        english: '"Should I not feel sad about a great city full of people?"',
-        words: [
-          { word: 'should', meaning: '~해야 한다', pronunciation: '/ʃʊd/' },
-          { word: 'full of', meaning: '~로 가득한', pronunciation: '/fʊl ʌv/' },
-        ],
-      },
-      standard: {
-        english: '"Should I not have compassion on the great city of Nineveh, with so many people in it?"',
-        words: [
-          { word: 'compassion', meaning: '연민, 긍휼', pronunciation: '/kəmˈpæʃən/' },
-          { word: 'so many', meaning: '아주 많은', pronunciation: '/soʊ ˈmɛni/' },
-        ],
-      },
+      english: '"Should I not have compassion on the great city of Nineveh, with so many people in it?"',
+      words: [
+        {
+          word: 'compassion',
+          meaning: '연민, 긍휼',
+          pronunciation: '/kəmˈpæʃən/',
+        },
+        {
+          word: 'so many',
+          meaning: '아주 많은',
+          pronunciation: '/soʊ ˈmɛni/',
+        },
+      ],
     },
   ],
   quiz: [
@@ -2731,7 +2775,12 @@ export const jonahLesson3: Lesson = {
     },
     {
       question: '하나님이 요나 위에 무엇을 자라게 하셨나요?',
-      options: ['잎이 무성한 식물 (그늘을 위해)', '큰 나무', '텐트', '우산'],
+      options: [
+        '잎이 무성한 식물 (그늘을 위해)',
+        '큰 나무',
+        '텐트',
+        '우산',
+      ],
       correctIndex: 0,
       explanation: 'a leafy plant — 잎이 무성한 식물. 보통(WEB)에서는 vine(덩굴)이라고 표현해요.',
     },
@@ -2758,230 +2807,213 @@ export const danielLesson1: Lesson = {
   description: '왕의 사랑을 받은 다니엘. 질투한 동료들이 만든 함정의 법.',
   estimatedMinutes: 5,
   source: {
-    easy: { label: 'Daniel 6:1–10, BBE — Public Domain', url: 'https://ebible.org/bbe/DAN06.htm' },
-    standard: { label: 'Daniel 6:1–10, WEB — Public Domain', url: 'https://ebible.org/web/DAN06.htm' },
+    label: 'Daniel 6:1–10, WEB — Public Domain',
+    url: 'https://ebible.org/web/DAN06.htm',
   },
   sentences: [
     {
       korean: '다니엘은 왕을 섬기는 선하고 지혜로운 사람이었어요.',
       reference: 'Daniel 6:3',
-      easy: {
-        english: 'Daniel was a good and wise man who served the king.',
-        words: [
-          { word: 'good', meaning: '선한', pronunciation: '/ɡʊd/' },
-          { word: 'wise', meaning: '지혜로운', pronunciation: '/waɪz/' },
-          { word: 'served', meaning: '섬겼다', pronunciation: '/sɜːrvd/' },
-        ],
-      },
-      standard: {
-        english: 'Daniel was a man of excellent spirit who served the king with wisdom.',
-        words: [
-          { word: 'excellent', meaning: '뛰어난', pronunciation: '/ˈɛksələnt/' },
-          { word: 'spirit', meaning: '영, 정신', pronunciation: '/ˈspɪrɪt/' },
-          { word: 'wisdom', meaning: '지혜', pronunciation: '/ˈwɪzdəm/' },
-        ],
-      },
+      english: 'Daniel was a man of excellent spirit who served the king with wisdom.',
+      words: [
+        {
+          word: 'excellent',
+          meaning: '뛰어난',
+          pronunciation: '/ˈɛksələnt/',
+        },
+        {
+          word: 'spirit',
+          meaning: '영, 정신',
+          pronunciation: '/ˈspɪrɪt/',
+        },
+        {
+          word: 'wisdom',
+          meaning: '지혜',
+          pronunciation: '/ˈwɪzdəm/',
+        },
+      ],
     },
     {
       korean: '왕은 다니엘을 매우 좋아했어요.',
       reference: 'Daniel 6:3',
-      easy: {
-        english: 'The king liked Daniel very much.',
-        words: [
-          { word: 'liked', meaning: '좋아했다', pronunciation: '/laɪkt/' },
-          { word: 'very much', meaning: '매우', pronunciation: '/ˈvɛri mʌtʃ/' },
-        ],
-      },
-      standard: {
-        english: 'The king favored Daniel above all the others.',
-        words: [
-          { word: 'favored', meaning: '편애했다', pronunciation: '/ˈfeɪvərd/' },
-          { word: 'above', meaning: '~보다 위에', pronunciation: '/əˈbʌv/' },
-        ],
-      },
+      english: 'The king favored Daniel above all the others.',
+      words: [
+        {
+          word: 'favored',
+          meaning: '편애했다',
+          pronunciation: '/ˈfeɪvərd/',
+        },
+        {
+          word: 'above',
+          meaning: '~보다 위에',
+          pronunciation: '/əˈbʌv/',
+        },
+      ],
     },
     {
       korean: '왕은 다니엘을 온 나라의 지도자로 세우려 했어요.',
       reference: 'Daniel 6:3',
-      easy: {
-        english: 'He wanted to make Daniel the leader of all the kingdom.',
-        words: [
-          { word: 'leader', meaning: '지도자', pronunciation: '/ˈliːdər/' },
-          { word: 'kingdom', meaning: '왕국, 나라', pronunciation: '/ˈkɪŋdəm/' },
-        ],
-      },
-      standard: {
-        english: 'The king planned to set Daniel over the entire kingdom.',
-        words: [
-          { word: 'planned', meaning: '계획했다', pronunciation: '/plænd/' },
-          { word: 'entire', meaning: '전체의', pronunciation: '/ɪnˈtaɪər/' },
-        ],
-      },
+      english: 'The king planned to set Daniel over the entire kingdom.',
+      words: [
+        {
+          word: 'planned',
+          meaning: '계획했다',
+          pronunciation: '/plænd/',
+        },
+        {
+          word: 'entire',
+          meaning: '전체의',
+          pronunciation: '/ɪnˈtaɪər/',
+        },
+      ],
     },
     {
       korean: '하지만 다른 관리들은 질투했어요.',
       reference: 'Daniel 6:4',
-      easy: {
-        english: 'But the other officials were jealous.',
-        words: [
-          { word: 'officials', meaning: '관리들', pronunciation: '/əˈfɪʃəlz/' },
-          { word: 'jealous', meaning: '질투하는', pronunciation: '/ˈdʒɛləs/' },
-        ],
-      },
-      standard: {
-        english: 'But the other officials grew envious of Daniel.',
-        words: [
-          { word: 'envious', meaning: '시기하는', pronunciation: '/ˈɛnviəs/' },
-        ],
-      },
+      english: 'But the other officials grew envious of Daniel.',
+      words: [
+        {
+          word: 'envious',
+          meaning: '시기하는',
+          pronunciation: '/ˈɛnviəs/',
+        },
+      ],
     },
     {
       korean: '그들은 생각했어요. "어떻게 다니엘을 곤경에 빠뜨릴 수 있을까?"',
       reference: 'Daniel 6:4',
-      easy: {
-        english: 'They thought, "How can we make trouble for Daniel?"',
-        words: [
-          { word: 'thought', meaning: '생각했다', pronunciation: '/θɔːt/' },
-          { word: 'trouble', meaning: '문제, 곤경', pronunciation: '/ˈtrʌbəl/' },
-        ],
-      },
-      standard: {
-        english: 'They schemed, "How can we find a charge against Daniel?"',
-        words: [
-          { word: 'schemed', meaning: '음모를 꾸몄다', pronunciation: '/skiːmd/' },
-          { word: 'charge', meaning: '죄목, 고발', pronunciation: '/tʃɑːrdʒ/' },
-        ],
-      },
+      english: 'They schemed, "How can we find a charge against Daniel?"',
+      words: [
+        {
+          word: 'schemed',
+          meaning: '음모를 꾸몄다',
+          pronunciation: '/skiːmd/',
+        },
+        {
+          word: 'charge',
+          meaning: '죄목, 고발',
+          pronunciation: '/tʃɑːrdʒ/',
+        },
+      ],
     },
     {
       korean: '그들은 다니엘이 매일 세 번 하나님께 기도하는 것을 알고 있었어요.',
       reference: 'Daniel 6:10',
-      easy: {
-        english: 'They knew Daniel prayed to God three times every day.',
-        words: [
-          { word: 'knew', meaning: '알았다', pronunciation: '/njuː/' },
-          { word: 'prayed', meaning: '기도했다', pronunciation: '/preɪd/' },
-          { word: 'three times', meaning: '세 번', pronunciation: '/θriː taɪmz/' },
-        ],
-      },
-      standard: {
-        english: 'They knew that Daniel prayed three times a day, every day.',
-        words: [
-          { word: 'three times', meaning: '세 번', pronunciation: '/θriː taɪmz/' },
-        ],
-      },
+      english: 'They knew that Daniel prayed three times a day, every day.',
+      words: [
+        {
+          word: 'three times',
+          meaning: '세 번',
+          pronunciation: '/θriː taɪmz/',
+        },
+      ],
     },
     {
       korean: '그래서 그들은 계획을 세웠어요. 왕에게 갔어요.',
       reference: 'Daniel 6:6',
-      easy: {
-        english: 'So they made a plan. They went to the king.',
-        words: [
-          { word: 'plan', meaning: '계획', pronunciation: '/plæn/' },
-          { word: 'went', meaning: '갔다', pronunciation: '/wɛnt/' },
-        ],
-      },
-      standard: {
-        english: 'So they devised a plan and approached the king.',
-        words: [
-          { word: 'devised', meaning: '고안했다', pronunciation: '/dɪˈvaɪzd/' },
-          { word: 'approached', meaning: '다가갔다', pronunciation: '/əˈproʊtʃt/' },
-        ],
-      },
+      english: 'So they devised a plan and approached the king.',
+      words: [
+        {
+          word: 'devised',
+          meaning: '고안했다',
+          pronunciation: '/dɪˈvaɪzd/',
+        },
+        {
+          word: 'approached',
+          meaning: '다가갔다',
+          pronunciation: '/əˈproʊtʃt/',
+        },
+      ],
     },
     {
       korean: '"위대한 왕이시여, 새 법을 만드십시오!" 그들이 말했어요.',
       reference: 'Daniel 6:7',
-      easy: {
-        english: '"Great king, make a new law!" they said.',
-        words: [
-          { word: 'great', meaning: '위대한', pronunciation: '/ɡreɪt/' },
-          { word: 'law', meaning: '법', pronunciation: '/lɔː/' },
-        ],
-      },
-      standard: {
-        english: '"O great king, issue a new decree!" they declared.',
-        words: [
-          { word: 'issue', meaning: '발표하다', pronunciation: '/ˈɪʃuː/' },
-          { word: 'decree', meaning: '칙령', pronunciation: '/dɪˈkriː/' },
-          { word: 'declared', meaning: '선언했다', pronunciation: '/dɪˈklɛərd/' },
-        ],
-      },
+      english: '"O great king, issue a new decree!" they declared.',
+      words: [
+        {
+          word: 'issue',
+          meaning: '발표하다',
+          pronunciation: '/ˈɪʃuː/',
+        },
+        {
+          word: 'decree',
+          meaning: '칙령',
+          pronunciation: '/dɪˈkriː/',
+        },
+        {
+          word: 'declared',
+          meaning: '선언했다',
+          pronunciation: '/dɪˈklɛərd/',
+        },
+      ],
     },
     {
       korean: '"30일 동안, 아무도 당신 외에는 누구에게도 기도해서는 안 됩니다."',
       reference: 'Daniel 6:7',
-      easy: {
-        english: '"For thirty days, no one may pray to anyone but you."',
-        words: [
-          { word: 'thirty', meaning: '30, 삼십', pronunciation: '/ˈθɜːrti/' },
-          { word: 'no one', meaning: '아무도 ~않다', pronunciation: '/noʊ wʌn/' },
-          { word: 'anyone', meaning: '누구도', pronunciation: '/ˈɛniwʌn/' },
-        ],
-      },
-      standard: {
-        english: '"For thirty days, no person shall offer prayer to any god or man except you."',
-        words: [
-          { word: 'shall', meaning: '~해야 한다', pronunciation: '/ʃæl/' },
-          { word: 'offer', meaning: '드리다', pronunciation: '/ˈɒfər/' },
-          { word: 'except', meaning: '~외에', pronunciation: '/ɪkˈsɛpt/' },
-        ],
-      },
+      english: '"For thirty days, no person shall offer prayer to any god or man except you."',
+      words: [
+        {
+          word: 'shall',
+          meaning: '~해야 한다',
+          pronunciation: '/ʃæl/',
+        },
+        {
+          word: 'offer',
+          meaning: '드리다',
+          pronunciation: '/ˈɒfər/',
+        },
+        {
+          word: 'except',
+          meaning: '~외에',
+          pronunciation: '/ɪkˈsɛpt/',
+        },
+      ],
     },
     {
       korean: '"이 법을 어기는 자는 사자굴에 던져질 것입니다."',
       reference: 'Daniel 6:7',
-      easy: {
-        english: '"Anyone who breaks this law will be thrown into the lions\' den."',
-        words: [
-          { word: 'breaks', meaning: '어기다', pronunciation: '/breɪks/' },
-          { word: 'thrown', meaning: '던져진', pronunciation: '/θroʊn/' },
-          { word: 'lions', meaning: '사자들', pronunciation: '/ˈlaɪənz/' },
-          { word: 'den', meaning: '굴', pronunciation: '/dɛn/' },
-        ],
-      },
-      standard: {
-        english: '"Whoever breaks this decree shall be cast into the den of lions."',
-        words: [
-          { word: 'whoever', meaning: '누구든지', pronunciation: '/huːˈɛvər/' },
-          { word: 'cast', meaning: '던져지다', pronunciation: '/kæst/' },
-        ],
-      },
+      english: '"Whoever breaks this decree shall be cast into the den of lions."',
+      words: [
+        {
+          word: 'whoever',
+          meaning: '누구든지',
+          pronunciation: '/huːˈɛvər/',
+        },
+        {
+          word: 'cast',
+          meaning: '던져지다',
+          pronunciation: '/kæst/',
+        },
+      ],
     },
     {
       korean: '왕은 새 법에 서명했어요.',
       reference: 'Daniel 6:9',
-      easy: {
-        english: 'The king signed the new law.',
-        words: [
-          { word: 'signed', meaning: '서명했다', pronunciation: '/saɪnd/' },
-        ],
-      },
-      standard: {
-        english: 'The king signed the decree, making it official.',
-        words: [
-          { word: 'official', meaning: '공식적인', pronunciation: '/əˈfɪʃəl/' },
-        ],
-      },
+      english: 'The king signed the decree, making it official.',
+      words: [
+        {
+          word: 'official',
+          meaning: '공식적인',
+          pronunciation: '/əˈfɪʃəl/',
+        },
+      ],
     },
     {
       korean: '다니엘은 그 법에 대해 들었어요. 집에 가서 창문을 열고, 다른 날과 똑같이 하나님께 기도했어요.',
       reference: 'Daniel 6:10',
-      easy: {
-        english: 'Daniel heard about the law. He went home, opened his window, and prayed to God — just like every other day.',
-        words: [
-          { word: 'heard', meaning: '들었다', pronunciation: '/hɜːrd/' },
-          { word: 'window', meaning: '창문', pronunciation: '/ˈwɪndoʊ/' },
-          { word: 'every other day', meaning: '다른 날과 똑같이', pronunciation: '/ˈɛvri ˈʌðər deɪ/' },
-        ],
-      },
-      standard: {
-        english: 'When Daniel heard about the decree, he went home, opened his window toward Jerusalem, and prayed as he always did.',
-        words: [
-          { word: 'Jerusalem', meaning: '예루살렘', pronunciation: '/dʒəˈruːsələm/' },
-          { word: 'always', meaning: '항상', pronunciation: '/ˈɔːlweɪz/' },
-        ],
-      },
+      english: 'When Daniel heard about the decree, he went home, opened his window toward Jerusalem, and prayed as he always did.',
+      words: [
+        {
+          word: 'Jerusalem',
+          meaning: '예루살렘',
+          pronunciation: '/dʒəˈruːsələm/',
+        },
+        {
+          word: 'always',
+          meaning: '항상',
+          pronunciation: '/ˈɔːlweɪz/',
+        },
+      ],
     },
   ],
   quiz: [
@@ -3030,237 +3062,248 @@ export const danielLesson2: Lesson = {
   description: '함정에 걸린 다니엘. 사자굴에서 보낸 밤. 새벽에 일어난 놀라운 일.',
   estimatedMinutes: 5,
   source: {
-    easy: { label: 'Daniel 6:11–23, BBE — Public Domain', url: 'https://ebible.org/bbe/DAN06.htm' },
-    standard: { label: 'Daniel 6:11–23, WEB — Public Domain', url: 'https://ebible.org/web/DAN06.htm' },
+    label: 'Daniel 6:11–23, WEB — Public Domain',
+    url: 'https://ebible.org/web/DAN06.htm',
   },
   sentences: [
     {
       korean: '다른 관리들이 다니엘이 기도하는 것을 보았어요. 그들은 왕에게 달려갔어요.',
       reference: 'Daniel 6:11–12',
-      easy: {
-        english: 'The other officials saw Daniel praying. They ran to the king.',
-        words: [
-          { word: 'saw', meaning: '보았다', pronunciation: '/sɔː/' },
-          { word: 'praying', meaning: '기도하는', pronunciation: '/ˈpreɪɪŋ/' },
-          { word: 'ran', meaning: '달려갔다', pronunciation: '/ræn/' },
-        ],
-      },
-      standard: {
-        english: 'The officials caught Daniel in prayer and rushed to inform the king.',
-        words: [
-          { word: 'caught', meaning: '잡았다 (catch의 과거형)', pronunciation: '/kɔːt/' },
-          { word: 'rushed', meaning: '서둘러 갔다', pronunciation: '/rʌʃt/' },
-          { word: 'inform', meaning: '알리다', pronunciation: '/ɪnˈfɔːrm/' },
-        ],
-      },
+      english: 'The officials caught Daniel in prayer and rushed to inform the king.',
+      words: [
+        {
+          word: 'caught',
+          meaning: '잡았다 (catch의 과거형)',
+          pronunciation: '/kɔːt/',
+        },
+        {
+          word: 'rushed',
+          meaning: '서둘러 갔다',
+          pronunciation: '/rʌʃt/',
+        },
+        {
+          word: 'inform',
+          meaning: '알리다',
+          pronunciation: '/ɪnˈfɔːrm/',
+        },
+      ],
     },
     {
       korean: '"다니엘이 여전히 자기 하나님께 하루 세 번 기도합니다!" 그들이 말했어요.',
       reference: 'Daniel 6:13',
-      easy: {
-        english: '"Daniel still prays to his God three times a day!" they said.',
-        words: [
-          { word: 'still', meaning: '여전히', pronunciation: '/stɪl/' },
-        ],
-      },
-      standard: {
-        english: '"Daniel continues to pray to his God three times a day, ignoring your decree!" they reported.',
-        words: [
-          { word: 'continues', meaning: '계속한다', pronunciation: '/kənˈtɪnjuːz/' },
-          { word: 'ignoring', meaning: '무시하면서', pronunciation: '/ɪɡˈnɔːrɪŋ/' },
-        ],
-      },
+      english: '"Daniel continues to pray to his God three times a day, ignoring your decree!" they reported.',
+      words: [
+        {
+          word: 'continues',
+          meaning: '계속한다',
+          pronunciation: '/kənˈtɪnjuːz/',
+        },
+        {
+          word: 'ignoring',
+          meaning: '무시하면서',
+          pronunciation: '/ɪɡˈnɔːrɪŋ/',
+        },
+      ],
     },
     {
       korean: '왕은 매우 슬퍼했어요. 다니엘을 좋아했거든요.',
       reference: 'Daniel 6:14',
-      easy: {
-        english: 'The king was very sad. He liked Daniel.',
-        words: [
-          { word: 'very sad', meaning: '매우 슬픈', pronunciation: '/ˈvɛri sæd/' },
-        ],
-      },
-      standard: {
-        english: 'The king was deeply troubled, for he cared about Daniel.',
-        words: [
-          { word: 'deeply', meaning: '깊이', pronunciation: '/ˈdiːpli/' },
-          { word: 'troubled', meaning: '괴로운', pronunciation: '/ˈtrʌbəld/' },
-          { word: 'cared', meaning: '아꼈다', pronunciation: '/kɛərd/' },
-        ],
-      },
+      english: 'The king was deeply troubled, for he cared about Daniel.',
+      words: [
+        {
+          word: 'deeply',
+          meaning: '깊이',
+          pronunciation: '/ˈdiːpli/',
+        },
+        {
+          word: 'troubled',
+          meaning: '괴로운',
+          pronunciation: '/ˈtrʌbəld/',
+        },
+        {
+          word: 'cared',
+          meaning: '아꼈다',
+          pronunciation: '/kɛərd/',
+        },
+      ],
     },
     {
       korean: '왕은 종일 다니엘을 구하려 했지만, 법은 바꿀 수 없었어요.',
       reference: 'Daniel 6:14',
-      easy: {
-        english: 'He tried all day to save Daniel, but the law could not be changed.',
-        words: [
-          { word: 'tried', meaning: '노력했다', pronunciation: '/traɪd/' },
-          { word: 'save', meaning: '구하다', pronunciation: '/seɪv/' },
-          { word: 'changed', meaning: '바뀌다', pronunciation: '/tʃeɪndʒd/' },
-        ],
-      },
-      standard: {
-        english: 'Until sunset, the king sought a way to rescue Daniel, but the decree could not be reversed.',
-        words: [
-          { word: 'sunset', meaning: '해질녘', pronunciation: '/ˈsʌnsɛt/' },
-          { word: 'rescue', meaning: '구출하다', pronunciation: '/ˈrɛskjuː/' },
-          { word: 'reversed', meaning: '뒤집다', pronunciation: '/rɪˈvɜːrst/' },
-        ],
-      },
+      english: 'Until sunset, the king sought a way to rescue Daniel, but the decree could not be reversed.',
+      words: [
+        {
+          word: 'sunset',
+          meaning: '해질녘',
+          pronunciation: '/ˈsʌnsɛt/',
+        },
+        {
+          word: 'rescue',
+          meaning: '구출하다',
+          pronunciation: '/ˈrɛskjuː/',
+        },
+        {
+          word: 'reversed',
+          meaning: '뒤집다',
+          pronunciation: '/rɪˈvɜːrst/',
+        },
+      ],
     },
     {
       korean: '결국 왕은 다니엘을 사자굴에 던지라고 명령했어요.',
       reference: 'Daniel 6:16',
-      easy: {
-        english: "At last, the king ordered Daniel to be thrown into the lions' den.",
-        words: [
-          { word: 'at last', meaning: '결국', pronunciation: '/æt læst/' },
-          { word: 'ordered', meaning: '명령했다', pronunciation: '/ˈɔːrdərd/' },
-          { word: 'thrown', meaning: '던져진', pronunciation: '/θroʊn/' },
-        ],
-      },
-      standard: {
-        english: "Finally, the king commanded that Daniel be cast into the den of lions.",
-        words: [
-          { word: 'finally', meaning: '마침내', pronunciation: '/ˈfaɪnəli/' },
-          { word: 'commanded', meaning: '명령했다', pronunciation: '/kəˈmændɪd/' },
-          { word: 'cast', meaning: '던지다', pronunciation: '/kæst/' },
-        ],
-      },
+      english: 'Finally, the king commanded that Daniel be cast into the den of lions.',
+      words: [
+        {
+          word: 'finally',
+          meaning: '마침내',
+          pronunciation: '/ˈfaɪnəli/',
+        },
+        {
+          word: 'commanded',
+          meaning: '명령했다',
+          pronunciation: '/kəˈmændɪd/',
+        },
+        {
+          word: 'cast',
+          meaning: '던지다',
+          pronunciation: '/kæst/',
+        },
+      ],
     },
     {
       korean: '왕이 다니엘에게 말했어요. "네가 섬기는 하나님이 너를 구하시기를."',
       reference: 'Daniel 6:16',
-      easy: {
-        english: 'The king said to Daniel, "May the God you serve save you."',
-        words: [
-          { word: 'serve', meaning: '섬기다', pronunciation: '/sɜːrv/' },
-          { word: 'save', meaning: '구하다', pronunciation: '/seɪv/' },
-        ],
-      },
-      standard: {
-        english: 'The king said to Daniel, "May your God, whom you serve continually, deliver you."',
-        words: [
-          { word: 'continually', meaning: '계속해서', pronunciation: '/kənˈtɪnjuəli/' },
-          { word: 'deliver', meaning: '구원하다', pronunciation: '/dɪˈlɪvər/' },
-        ],
-      },
+      english: 'The king said to Daniel, "May your God, whom you serve continually, deliver you."',
+      words: [
+        {
+          word: 'continually',
+          meaning: '계속해서',
+          pronunciation: '/kənˈtɪnjuəli/',
+        },
+        {
+          word: 'deliver',
+          meaning: '구원하다',
+          pronunciation: '/dɪˈlɪvər/',
+        },
+      ],
     },
     {
       korean: '큰 돌을 굴 입구에 놓았어요.',
       reference: 'Daniel 6:17',
-      easy: {
-        english: 'A great stone was placed over the mouth of the den.',
-        words: [
-          { word: 'stone', meaning: '돌', pronunciation: '/stoʊn/' },
-          { word: 'placed', meaning: '놓였다', pronunciation: '/pleɪst/' },
-          { word: 'mouth', meaning: '입구', pronunciation: '/maʊθ/' },
-        ],
-      },
-      standard: {
-        english: 'A massive stone was rolled over the entrance of the den and sealed.',
-        words: [
-          { word: 'massive', meaning: '거대한', pronunciation: '/ˈmæsɪv/' },
-          { word: 'rolled', meaning: '굴렸다', pronunciation: '/roʊld/' },
-          { word: 'entrance', meaning: '입구', pronunciation: '/ˈɛntrəns/' },
-          { word: 'sealed', meaning: '봉인됐다', pronunciation: '/siːld/' },
-        ],
-      },
+      english: 'A massive stone was rolled over the entrance of the den and sealed.',
+      words: [
+        {
+          word: 'massive',
+          meaning: '거대한',
+          pronunciation: '/ˈmæsɪv/',
+        },
+        {
+          word: 'rolled',
+          meaning: '굴렸다',
+          pronunciation: '/roʊld/',
+        },
+        {
+          word: 'entrance',
+          meaning: '입구',
+          pronunciation: '/ˈɛntrəns/',
+        },
+        {
+          word: 'sealed',
+          meaning: '봉인됐다',
+          pronunciation: '/siːld/',
+        },
+      ],
     },
     {
       korean: '그날 밤, 왕은 음식을 먹을 수도, 잠을 잘 수도 없었어요.',
       reference: 'Daniel 6:18',
-      easy: {
-        english: 'That night, the king could not eat. He could not sleep.',
-        words: [
-          { word: 'eat', meaning: '먹다', pronunciation: '/iːt/' },
-          { word: 'sleep', meaning: '자다', pronunciation: '/sliːp/' },
-        ],
-      },
-      standard: {
-        english: 'That night, the king refused all food and could not sleep.',
-        words: [
-          { word: 'refused', meaning: '거부했다', pronunciation: '/rɪˈfjuːzd/' },
-        ],
-      },
+      english: 'That night, the king refused all food and could not sleep.',
+      words: [
+        {
+          word: 'refused',
+          meaning: '거부했다',
+          pronunciation: '/rɪˈfjuːzd/',
+        },
+      ],
     },
     {
       korean: '이른 아침, 왕이 사자굴로 달려갔어요.',
       reference: 'Daniel 6:19',
-      easy: {
-        english: "Early in the morning, the king ran to the lions' den.",
-        words: [
-          { word: 'early', meaning: '이른', pronunciation: '/ˈɜːrli/' },
-          { word: 'morning', meaning: '아침', pronunciation: '/ˈmɔːrnɪŋ/' },
-        ],
-      },
-      standard: {
-        english: 'At the break of dawn, the king hurried to the den.',
-        words: [
-          { word: 'dawn', meaning: '새벽', pronunciation: '/dɔːn/' },
-          { word: 'hurried', meaning: '서둘렀다', pronunciation: '/ˈhʌrid/' },
-        ],
-      },
+      english: 'At the break of dawn, the king hurried to the den.',
+      words: [
+        {
+          word: 'dawn',
+          meaning: '새벽',
+          pronunciation: '/dɔːn/',
+        },
+        {
+          word: 'hurried',
+          meaning: '서둘렀다',
+          pronunciation: '/ˈhʌrid/',
+        },
+      ],
     },
     {
       korean: '"다니엘아! 네 하나님이 너를 사자에게서 구하셨느냐?"',
       reference: 'Daniel 6:20',
-      easy: {
-        english: '"Daniel! Was your God able to save you from the lions?"',
-        words: [
-          { word: 'able to', meaning: '~할 수 있는', pronunciation: '/ˈeɪbəl tuː/' },
-        ],
-      },
-      standard: {
-        english: '"Daniel, servant of the living God, has your God been able to deliver you from the lions?"',
-        words: [
-          { word: 'servant', meaning: '종', pronunciation: '/ˈsɜːrvənt/' },
-          { word: 'living', meaning: '살아 계신', pronunciation: '/ˈlɪvɪŋ/' },
-        ],
-      },
+      english: '"Daniel, servant of the living God, has your God been able to deliver you from the lions?"',
+      words: [
+        {
+          word: 'servant',
+          meaning: '종',
+          pronunciation: '/ˈsɜːrvənt/',
+        },
+        {
+          word: 'living',
+          meaning: '살아 계신',
+          pronunciation: '/ˈlɪvɪŋ/',
+        },
+      ],
     },
     {
       korean: '다니엘이 대답했어요. "제 하나님께서 천사를 보내 사자들의 입을 닫으셨어요. 저는 안전합니다."',
       reference: 'Daniel 6:21–22',
-      easy: {
-        english: 'Daniel answered, "My God sent his angel to shut the lions\' mouths. I am safe."',
-        words: [
-          { word: 'answered', meaning: '대답했다', pronunciation: '/ˈænsərd/' },
-          { word: 'angel', meaning: '천사', pronunciation: '/ˈeɪndʒəl/' },
-          { word: 'shut', meaning: '닫았다', pronunciation: '/ʃʌt/' },
-          { word: 'mouths', meaning: '입들', pronunciation: '/maʊðz/' },
-          { word: 'safe', meaning: '안전한', pronunciation: '/seɪf/' },
-        ],
-      },
-      standard: {
-        english: 'Daniel replied, "My God sent his angel and shut the mouths of the lions. They have not harmed me."',
-        words: [
-          { word: 'replied', meaning: '대답했다', pronunciation: '/rɪˈplaɪd/' },
-          { word: 'harmed', meaning: '해쳤다', pronunciation: '/hɑːrmd/' },
-        ],
-      },
+      english: 'Daniel replied, "My God sent his angel and shut the mouths of the lions. They have not harmed me."',
+      words: [
+        {
+          word: 'replied',
+          meaning: '대답했다',
+          pronunciation: '/rɪˈplaɪd/',
+        },
+        {
+          word: 'harmed',
+          meaning: '해쳤다',
+          pronunciation: '/hɑːrmd/',
+        },
+      ],
     },
     {
       korean: '왕은 기쁨으로 가득 찼어요. 모두에게 외쳤어요. "다니엘의 하나님은 위대하시다!"',
       reference: 'Daniel 6:23, 26',
-      easy: {
-        english: 'The king was filled with joy. He told everyone, "The God of Daniel is great!"',
-        words: [
-          { word: 'filled', meaning: '가득한', pronunciation: '/fɪld/' },
-          { word: 'joy', meaning: '기쁨', pronunciation: '/dʒɔɪ/' },
-          { word: 'great', meaning: '위대한', pronunciation: '/ɡreɪt/' },
-        ],
-      },
-      standard: {
-        english: 'Overjoyed, the king proclaimed throughout his kingdom, "The God of Daniel is mighty and everlasting!"',
-        words: [
-          { word: 'overjoyed', meaning: '아주 기쁜', pronunciation: '/ˌoʊvərˈdʒɔɪd/' },
-          { word: 'proclaimed', meaning: '선포했다', pronunciation: '/prəˈkleɪmd/' },
-          { word: 'mighty', meaning: '강하신', pronunciation: '/ˈmaɪti/' },
-          { word: 'everlasting', meaning: '영원한', pronunciation: '/ˌɛvərˈlæstɪŋ/' },
-        ],
-      },
+      english: 'Overjoyed, the king proclaimed throughout his kingdom, "The God of Daniel is mighty and everlasting!"',
+      words: [
+        {
+          word: 'overjoyed',
+          meaning: '아주 기쁜',
+          pronunciation: '/ˌoʊvərˈdʒɔɪd/',
+        },
+        {
+          word: 'proclaimed',
+          meaning: '선포했다',
+          pronunciation: '/prəˈkleɪmd/',
+        },
+        {
+          word: 'mighty',
+          meaning: '강하신',
+          pronunciation: '/ˈmaɪti/',
+        },
+        {
+          word: 'everlasting',
+          meaning: '영원한',
+          pronunciation: '/ˌɛvərˈlæstɪŋ/',
+        },
+      ],
     },
   ],
   quiz: [
@@ -3284,7 +3327,7 @@ export const danielLesson2: Lesson = {
         '사자들과 함께 잤다',
       ],
       correctIndex: 0,
-      explanation: 'My God sent his angel and shut the lions\' mouths — 다니엘은 무사했어요. 사자가 다니엘을 해치지 않았어요.',
+      explanation: "My God sent his angel and shut the lions' mouths — 다니엘은 무사했어요. 사자가 다니엘을 해치지 않았어요.",
     },
     {
       question: '이 이야기의 메시지는?',
@@ -3301,21 +3344,21 @@ export const danielLesson2: Lesson = {
 }
 
 export const lessons: Record<string, Lesson> = {
-  'creation/1': creationLesson1,
-  'david/1': davidLesson1,
-  'david/2': davidLesson2,
-  'noah/1': noahLesson1,
-  'noah/2': noahLesson2,
-  'noah/3': noahLesson3,
-  'jonah/1': jonahLesson1,
-  'jonah/2': jonahLesson2,
-  'jonah/3': jonahLesson3,
-  'daniel/1': danielLesson1,
-  'daniel/2': danielLesson2,
+  'creation-1': creationLesson1,
+  'david-1': davidLesson1,
+  'david-2': davidLesson2,
+  'noah-1': noahLesson1,
+  'noah-2': noahLesson2,
+  'noah-3': noahLesson3,
+  'jonah-1': jonahLesson1,
+  'jonah-2': jonahLesson2,
+  'jonah-3': jonahLesson3,
+  'daniel-1': danielLesson1,
+  'daniel-2': danielLesson2,
 }
 
 export function getLesson(storyId: string, lessonNum: string | number): Lesson | undefined {
-  return lessons[`${storyId}/${lessonNum}`]
+  return lessons[`${storyId}-${lessonNum}`]
 }
 
 export function getStoryLessons(storyId: string): Lesson[] {
@@ -3325,10 +3368,9 @@ export function getStoryLessons(storyId: string): Lesson[] {
 }
 
 export function getAllLessons(): Lesson[] {
-  const storyOrder = new Map(stories.map((s, i) => [s.id, s.order ?? i]))
   return Object.values(lessons).sort((a, b) => {
-    const sa = storyOrder.get(a.storyId) ?? 99
-    const sb = storyOrder.get(b.storyId) ?? 99
+    const sa = stories.find(s => s.id === a.storyId)?.order ?? 99
+    const sb = stories.find(s => s.id === b.storyId)?.order ?? 99
     if (sa !== sb) return sa - sb
     return a.lessonNum - b.lessonNum
   })
