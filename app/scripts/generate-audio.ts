@@ -34,11 +34,17 @@ function hashText(text: string): string {
   return crypto.createHash('sha256').update(text).digest('hex').slice(0, 16)
 }
 
-function collectSentences(): string[] {
+// Collect every text that the app might call `speak()` on: full sentences and
+// individual vocab words (for the WordPopup). Same generator covers both — we
+// only need each unique string spoken once.
+function collectSpeakables(): string[] {
   const set = new Set<string>()
   for (const lesson of getAllLessons()) {
     for (const s of lesson.sentences) {
       set.add(s.english.trim())
+      for (const w of s.words) {
+        if (w.word) set.add(w.word.trim())
+      }
     }
   }
   return [...set]
@@ -100,14 +106,14 @@ async function main() {
   fs.mkdirSync(AUDIO_DIR, { recursive: true })
   fs.mkdirSync(path.dirname(MANIFEST_PATH), { recursive: true })
 
-  const sentences = collectSentences()
-  console.log(`Found ${sentences.length} unique sentences.`)
+  const items = collectSpeakables()
+  console.log(`Found ${items.length} unique speakables (sentences + words).`)
 
   const manifest: Record<string, string> = {}
   let generated = 0
   let skipped = 0
 
-  for (const [i, text] of sentences.entries()) {
+  for (const [i, text] of items.entries()) {
     const hash = hashText(text)
     manifest[text] = hash
     const file = path.join(AUDIO_DIR, `${hash}.mp3`)
@@ -117,7 +123,7 @@ async function main() {
       continue
     }
 
-    process.stdout.write(`[${i + 1}/${sentences.length}] ${hash} ${text.slice(0, 50)}…  `)
+    process.stdout.write(`[${i + 1}/${items.length}] ${hash} ${text.slice(0, 50)}…  `)
     try {
       const buf = await synthesize(text)
       fs.writeFileSync(file, buf)

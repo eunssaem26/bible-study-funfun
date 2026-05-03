@@ -53,6 +53,17 @@ export default function Lesson() {
     }
   }
 
+  const handlePrev = () => {
+    if (phase === 'quiz') {
+      setPhase('reading')
+      setPicked(null)
+      return
+    }
+    if (index > 0) setIndex(index - 1)
+  }
+
+  const canGoBack = phase === 'quiz' || index > 0
+
   const handleQuizPick = (i: number) => {
     if (picked !== null) return
     setPicked(i)
@@ -137,24 +148,35 @@ export default function Lesson() {
 
       {/* Bottom action */}
       <footer className="sticky bottom-0 bg-gradient-to-t from-white via-white to-white/0 px-5 pt-6 pb-6">
-        {phase === 'reading' && (
+        <div className="flex gap-2">
           <button
-            onClick={handleNext}
-            className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-base transition-all shadow-sm"
+            onClick={handlePrev}
+            disabled={!canGoBack}
+            aria-label="이전"
+            className="shrink-0 w-14 py-4 rounded-2xl bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:hover:bg-zinc-100 active:scale-[0.97] text-zinc-700 font-bold text-base transition-all flex items-center justify-center"
           >
-            {index < total - 1 ? '다음' : '퀴즈 시작'}
+            ←
           </button>
-        )}
 
-        {phase === 'quiz' && (
-          <button
-            onClick={handleQuizNext}
-            disabled={picked === null}
-            className="w-full py-4 rounded-2xl bg-blue-600 disabled:bg-zinc-200 disabled:text-zinc-400 hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-base transition-all shadow-sm"
-          >
-            {quizIdx < lesson.quiz.length - 1 ? '다음 문제' : '결과 보기'}
-          </button>
-        )}
+          {phase === 'reading' && (
+            <button
+              onClick={handleNext}
+              className="flex-1 py-4 rounded-2xl bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-base transition-all shadow-sm"
+            >
+              {index < total - 1 ? '다음' : '퀴즈 시작'}
+            </button>
+          )}
+
+          {phase === 'quiz' && (
+            <button
+              onClick={handleQuizNext}
+              disabled={picked === null}
+              className="flex-1 py-4 rounded-2xl bg-blue-600 disabled:bg-zinc-200 disabled:text-zinc-400 hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-base transition-all shadow-sm"
+            >
+              {quizIdx < lesson.quiz.length - 1 ? '다음 문제' : '결과 보기'}
+            </button>
+          )}
+        </div>
       </footer>
 
       <WordPopup
