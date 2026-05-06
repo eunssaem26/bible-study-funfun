@@ -99,6 +99,16 @@ export const stories: Story[] = [
     totalLessons: 2,
     order: 5,
   },
+  {
+    id: 'esther',
+    title: 'Esther the Queen',
+    titleKr: '에스더',
+    emoji: '👑',
+    cover: 'from-purple-100 via-pink-100 to-rose-100',
+    description: '왕비가 된 한 소녀. 자기 사람들을 살리기 위해 목숨을 걸고 왕 앞에 선 에스더의 이야기.',
+    totalLessons: 2,
+    order: 6,
+  },
 ]
 
 export const creationLesson1: Lesson = {
@@ -3551,6 +3561,706 @@ export const danielLesson2: Lesson = {
   ],
 }
 
+export const estherLesson1: Lesson = {
+  id: 'esther-1',
+  storyId: 'esther',
+  lessonNum: 1,
+  title: 'Esther — The New Queen',
+  titleKr: '에스더 — 새 왕비',
+  description: '페르시아 궁전에서 왕비가 된 유대인 소녀 에스더. 한 사람의 분노에서 시작된 거대한 위기.',
+  estimatedMinutes: 5,
+  source: {
+    label: 'Esther 1–3, WEB — Public Domain',
+    url: 'https://ebible.org/web/EST01.htm',
+  },
+  sentences: [
+    {
+      korean: '옛날, 페르시아의 왕 아하수에로는 거대한 나라를 다스렸어요.',
+      reference: 'Esther 1:1',
+      english: 'Long ago, King Ahasuerus ruled over a vast kingdom in Persia.',
+      words: [
+        {
+          word: 'Ahasuerus',
+          meaning: '아하수에로 (왕 이름)',
+          pronunciation: '/əˌhæzjuˈɪərəs/',
+        },
+        {
+          word: 'ruled',
+          meaning: '다스렸다',
+          pronunciation: '/ruːld/',
+        },
+        {
+          word: 'vast',
+          meaning: '거대한',
+          pronunciation: '/væst/',
+        },
+        {
+          word: 'kingdom',
+          meaning: '왕국',
+          pronunciation: '/ˈkɪŋdəm/',
+        },
+      ],
+    },
+    {
+      korean: '어느 날, 왕은 새 왕비가 필요했어요.',
+      reference: 'Esther 2:2',
+      english: 'One day, the king needed a new queen.',
+      words: [
+        {
+          word: 'needed',
+          meaning: '필요했다',
+          pronunciation: '/ˈniːdɪd/',
+        },
+        {
+          word: 'queen',
+          meaning: '왕비',
+          pronunciation: '/kwiːn/',
+        },
+      ],
+    },
+    {
+      korean: '신하들은 나라 곳곳에서 아름다운 여인들을 데려왔어요.',
+      reference: 'Esther 2:3',
+      english: 'His servants brought beautiful young women from every part of the kingdom.',
+      words: [
+        {
+          word: 'servants',
+          meaning: '신하들, 종들',
+          pronunciation: '/ˈsɜːrvənts/',
+        },
+        {
+          word: 'brought',
+          meaning: '데려왔다',
+          pronunciation: '/brɔːt/',
+        },
+        {
+          word: 'beautiful',
+          meaning: '아름다운',
+          pronunciation: '/ˈbjuːtəfəl/',
+        },
+      ],
+    },
+    {
+      korean: '그중에 에스더라는 유대인 소녀가 있었어요. 부모를 잃고 사촌 모르드개가 그녀를 키웠어요.',
+      reference: 'Esther 2:7',
+      english: 'Among them was a Jewish girl named Esther, raised by her cousin Mordecai after she lost her parents.',
+      words: [
+        {
+          word: 'among',
+          meaning: '~중에',
+          pronunciation: '/əˈmʌŋ/',
+        },
+        {
+          word: 'Jewish',
+          meaning: '유대인의',
+          pronunciation: '/ˈdʒuːɪʃ/',
+        },
+        {
+          word: 'cousin',
+          meaning: '사촌',
+          pronunciation: '/ˈkʌzən/',
+        },
+        {
+          word: 'raised',
+          meaning: '키웠다',
+          pronunciation: '/reɪzd/',
+        },
+      ],
+    },
+    {
+      korean: '모르드개는 에스더에게 말했어요. "네 출신을 아무에게도 말하지 마라."',
+      reference: 'Esther 2:10',
+      english: 'Mordecai told Esther, "Do not tell anyone where you come from."',
+      words: [
+        {
+          word: 'Mordecai',
+          meaning: '모르드개',
+          pronunciation: '/ˈmɔːrdəkaɪ/',
+        },
+        {
+          word: 'anyone',
+          meaning: '누구든',
+          pronunciation: '/ˈɛniwʌn/',
+        },
+      ],
+    },
+    {
+      korean: '왕은 모든 여인 중에 에스더를 가장 사랑했어요. 그래서 그녀를 왕비로 삼았어요.',
+      reference: 'Esther 2:17',
+      english: 'The king loved Esther more than all the others, and he made her his queen.',
+      words: [
+        {
+          word: 'loved',
+          meaning: '사랑했다',
+          pronunciation: '/lʌvd/',
+        },
+        {
+          word: 'others',
+          meaning: '다른 사람들',
+          pronunciation: '/ˈʌðərz/',
+        },
+        {
+          word: 'made',
+          meaning: '~로 삼았다',
+          pronunciation: '/meɪd/',
+        },
+      ],
+    },
+    {
+      korean: '어느 날 모르드개는 두 사람이 왕을 해치려는 음모를 들었어요.',
+      reference: 'Esther 2:21',
+      english: 'One day Mordecai overheard two men plotting to harm the king.',
+      words: [
+        {
+          word: 'overheard',
+          meaning: '우연히 들었다',
+          pronunciation: '/ˌoʊvərˈhɜːrd/',
+        },
+        {
+          word: 'plotting',
+          meaning: '음모를 꾸미는',
+          pronunciation: '/ˈplɒtɪŋ/',
+        },
+        {
+          word: 'harm',
+          meaning: '해치다',
+          pronunciation: '/hɑːrm/',
+        },
+      ],
+    },
+    {
+      korean: '모르드개는 에스더에게 알렸고, 에스더는 왕에게 알렸어요.',
+      reference: 'Esther 2:22',
+      english: 'Mordecai warned Esther, and Esther told the king.',
+      words: [
+        {
+          word: 'warned',
+          meaning: '경고했다',
+          pronunciation: '/wɔːrnd/',
+        },
+      ],
+    },
+    {
+      korean: '왕은 무사했고, 모르드개의 이름은 왕실 기록에 남았어요.',
+      reference: 'Esther 2:23',
+      english: "The king was saved, and Mordecai's name was written in the royal records.",
+      words: [
+        {
+          word: 'saved',
+          meaning: '구해졌다',
+          pronunciation: '/seɪvd/',
+        },
+        {
+          word: 'royal',
+          meaning: '왕실의',
+          pronunciation: '/ˈrɔɪəl/',
+        },
+        {
+          word: 'records',
+          meaning: '기록',
+          pronunciation: '/ˈrɛkərdz/',
+        },
+      ],
+    },
+    {
+      korean: '그 후, 왕은 하만이라는 사람을 가장 높은 자리에 세웠어요.',
+      reference: 'Esther 3:1',
+      english: 'Later, the king promoted a man named Haman to the highest seat in the palace.',
+      words: [
+        {
+          word: 'Haman',
+          meaning: '하만 (사람 이름)',
+          pronunciation: '/ˈheɪmən/',
+        },
+        {
+          word: 'promoted',
+          meaning: '승진시켰다',
+          pronunciation: '/prəˈmoʊtɪd/',
+        },
+        {
+          word: 'palace',
+          meaning: '궁전',
+          pronunciation: '/ˈpælɪs/',
+        },
+      ],
+    },
+    {
+      korean: '왕은 모든 사람이 하만 앞에서 절해야 한다고 명령했어요.',
+      reference: 'Esther 3:2',
+      english: 'The king ordered everyone to bow down before Haman.',
+      words: [
+        {
+          word: 'ordered',
+          meaning: '명령했다',
+          pronunciation: '/ˈɔːrdərd/',
+        },
+        {
+          word: 'bow',
+          meaning: '절하다',
+          pronunciation: '/baʊ/',
+        },
+        {
+          word: 'before',
+          meaning: '~앞에서',
+          pronunciation: '/bɪˈfɔːr/',
+        },
+      ],
+    },
+    {
+      korean: '하지만 모르드개는 절하지 않았어요. "나는 하나님께만 절합니다."',
+      reference: 'Esther 3:2',
+      english: 'But Mordecai would not bow. "I bow only to God," he said.',
+      words: [
+        {
+          word: 'only',
+          meaning: '오직',
+          pronunciation: '/ˈoʊnli/',
+        },
+      ],
+    },
+    {
+      korean: '하만은 그 모습을 보고 분노로 가득 찼어요.',
+      reference: 'Esther 3:5',
+      english: 'When Haman saw this, he was filled with rage.',
+      words: [
+        {
+          word: 'filled',
+          meaning: '가득 찬',
+          pronunciation: '/fɪld/',
+        },
+        {
+          word: 'rage',
+          meaning: '분노',
+          pronunciation: '/reɪdʒ/',
+        },
+      ],
+    },
+    {
+      korean: '그는 모르드개와 그의 모든 민족을 없앨 계획을 세웠어요.',
+      reference: 'Esther 3:6',
+      english: 'He devised a plan to destroy Mordecai and all his people.',
+      words: [
+        {
+          word: 'devised',
+          meaning: '고안했다',
+          pronunciation: '/dɪˈvaɪzd/',
+        },
+        {
+          word: 'destroy',
+          meaning: '없애다',
+          pronunciation: '/dɪˈstrɔɪ/',
+        },
+        {
+          word: 'people',
+          meaning: '민족',
+          pronunciation: '/ˈpiːpəl/',
+        },
+      ],
+    },
+  ],
+  quiz: [
+    {
+      question: '모르드개가 에스더에게 한 조언은 무엇이었나요?',
+      options: [
+        '출신을 아무에게도 말하지 마라',
+        '왕에게 거짓말을 해라',
+        '몰래 도망쳐라',
+        '하만의 친구가 되어라',
+      ],
+      correctIndex: 0,
+      explanation: '모르드개는 에스더가 유대인이라는 사실을 비밀로 하라고 했어요. 이 비밀이 나중에 큰 의미를 갖게 돼요.',
+    },
+    {
+      question: '에스더는 어떻게 왕비가 되었나요?',
+      options: [
+        '왕이 모든 여인 중에 그녀를 가장 사랑해서',
+        '왕족 출신이라서',
+        '군대를 이끌어서',
+        '큰 재산을 갖고 있어서',
+      ],
+      correctIndex: 0,
+      explanation: 'King favored Esther — 왕은 에스더를 가장 사랑했고 그녀를 왕비로 삼았어요.',
+    },
+    {
+      question: '모르드개는 어떻게 왕을 도왔나요?',
+      options: [
+        '암살 음모를 듣고 알려주어서',
+        '돈을 빌려주어서',
+        '음식을 만들어 주어서',
+        '왕의 군대를 이끌어서',
+      ],
+      correctIndex: 0,
+      explanation: '모르드개는 우연히(overheard) 두 사람의 음모를 듣고 에스더를 통해 왕에게 알렸어요. 이 일은 기록에 남았어요.',
+    },
+    {
+      question: '하만이 모르드개에게 분노한 이유는?',
+      options: [
+        '모르드개가 자기 앞에서 절하지 않아서',
+        '모르드개가 돈을 훔쳐서',
+        '모르드개가 그를 때려서',
+        '모르드개가 더 부자라서',
+      ],
+      correctIndex: 0,
+      explanation: '모든 사람이 하만 앞에 절하라는 명령에도 모르드개는 하나님께만 절한다며 거부했어요. 그게 하만의 분노(rage)를 일으켰어요.',
+    },
+  ],
+}
+
+export const estherLesson2: Lesson = {
+  id: 'esther-2',
+  storyId: 'esther',
+  lessonNum: 2,
+  title: 'For Such a Time as This',
+  titleKr: '에스더 — 이 때를 위해',
+  description: '"내가 죽으면 죽으리이다." 왕 앞에 서기로 결단한 에스더, 그리고 한밤중의 반전.',
+  estimatedMinutes: 5,
+  source: {
+    label: 'Esther 4–9, WEB — Public Domain',
+    url: 'https://ebible.org/web/EST04.htm',
+  },
+  sentences: [
+    {
+      korean: '모르드개는 그 소식을 듣고 큰 슬픔에 잠겼어요.',
+      reference: 'Esther 4:1',
+      english: 'When Mordecai heard the news, he was deeply distressed.',
+      words: [
+        {
+          word: 'heard',
+          meaning: '들었다',
+          pronunciation: '/hɜːrd/',
+        },
+        {
+          word: 'deeply',
+          meaning: '깊이',
+          pronunciation: '/ˈdiːpli/',
+        },
+        {
+          word: 'distressed',
+          meaning: '괴로워하는',
+          pronunciation: '/dɪˈstrɛst/',
+        },
+      ],
+    },
+    {
+      korean: '그는 에스더에게 전갈을 보냈어요. "왕에게 가서 우리 사람들을 살려달라고 부탁해라."',
+      reference: 'Esther 4:8',
+      english: 'He sent a message to Esther, "Go to the king and beg him to save our people."',
+      words: [
+        {
+          word: 'message',
+          meaning: '전갈, 메시지',
+          pronunciation: '/ˈmɛsɪdʒ/',
+        },
+        {
+          word: 'beg',
+          meaning: '간청하다',
+          pronunciation: '/bɛɡ/',
+        },
+        {
+          word: 'save',
+          meaning: '살리다',
+          pronunciation: '/seɪv/',
+        },
+      ],
+    },
+    {
+      korean: '에스더는 두려웠어요. "왕이 부르지 않은 사람이 들어가면 죽을 수도 있어요."',
+      reference: 'Esther 4:11',
+      english: 'Esther was afraid. "Anyone who enters the king\'s room without being called may die."',
+      words: [
+        {
+          word: 'afraid',
+          meaning: '두려워하는',
+          pronunciation: '/əˈfreɪd/',
+        },
+        {
+          word: 'enters',
+          meaning: '들어가다',
+          pronunciation: '/ˈɛntərz/',
+        },
+        {
+          word: 'without',
+          meaning: '~없이',
+          pronunciation: '/wɪˈðaʊt/',
+        },
+      ],
+    },
+    {
+      korean: '모르드개가 답했어요. "어쩌면 너는 바로 이 때를 위해 왕비가 되었는지도 몰라."',
+      reference: 'Esther 4:14',
+      english: 'Mordecai answered, "Perhaps you became queen for such a time as this."',
+      words: [
+        {
+          word: 'perhaps',
+          meaning: '아마도',
+          pronunciation: '/pərˈhæps/',
+        },
+        {
+          word: 'became',
+          meaning: '~이 되었다',
+          pronunciation: '/bɪˈkeɪm/',
+        },
+        {
+          word: 'such',
+          meaning: '그러한',
+          pronunciation: '/sʌtʃ/',
+        },
+      ],
+    },
+    {
+      korean: '에스더는 결단했어요. "내가 죽으면 죽으리이다."',
+      reference: 'Esther 4:16',
+      english: 'Esther made up her mind. "If I perish, I perish."',
+      words: [
+        {
+          word: 'mind',
+          meaning: '마음, 결심',
+          pronunciation: '/maɪnd/',
+        },
+        {
+          word: 'perish',
+          meaning: '죽다',
+          pronunciation: '/ˈpɛrɪʃ/',
+        },
+      ],
+    },
+    {
+      korean: '사흘 동안 그녀와 모든 사람이 함께 금식하며 기도했어요.',
+      reference: 'Esther 4:16',
+      english: 'For three days, she and all her people fasted and prayed together.',
+      words: [
+        {
+          word: 'fasted',
+          meaning: '금식했다',
+          pronunciation: '/ˈfæstɪd/',
+        },
+        {
+          word: 'prayed',
+          meaning: '기도했다',
+          pronunciation: '/preɪd/',
+        },
+        {
+          word: 'together',
+          meaning: '함께',
+          pronunciation: '/təˈɡɛðər/',
+        },
+      ],
+    },
+    {
+      korean: '셋째 날, 에스더는 왕 앞에 섰어요. 왕은 황금 홀을 내밀었어요.',
+      reference: 'Esther 5:2',
+      english: 'On the third day, Esther stood before the king. He held out his golden scepter.',
+      words: [
+        {
+          word: 'stood',
+          meaning: '섰다',
+          pronunciation: '/stʊd/',
+        },
+        {
+          word: 'golden',
+          meaning: '황금의',
+          pronunciation: '/ˈɡoʊldən/',
+        },
+        {
+          word: 'scepter',
+          meaning: '왕의 홀',
+          pronunciation: '/ˈsɛptər/',
+        },
+      ],
+    },
+    {
+      korean: '에스더는 왕과 하만을 잔치에 초대했어요.',
+      reference: 'Esther 5:4',
+      english: 'Esther invited the king and Haman to a banquet.',
+      words: [
+        {
+          word: 'invited',
+          meaning: '초대했다',
+          pronunciation: '/ɪnˈvaɪtɪd/',
+        },
+        {
+          word: 'banquet',
+          meaning: '잔치',
+          pronunciation: '/ˈbæŋkwɪt/',
+        },
+      ],
+    },
+    {
+      korean: '그날 밤, 왕은 잠을 이룰 수 없었어요. 그는 옛 기록을 가져오게 했어요.',
+      reference: 'Esther 6:1',
+      english: 'That night, the king could not sleep. He asked for the old records to be read.',
+      words: [
+        {
+          word: 'sleep',
+          meaning: '자다',
+          pronunciation: '/sliːp/',
+        },
+        {
+          word: 'asked',
+          meaning: '요청했다',
+          pronunciation: '/æskt/',
+        },
+      ],
+    },
+    {
+      korean: '기록에는 모르드개가 왕의 목숨을 구한 일이 적혀 있었어요. "이 사람에게 무슨 상을 주었는가?"',
+      reference: 'Esther 6:3',
+      english: "The records told how Mordecai had saved the king's life. \"What reward was given to him?\"",
+      words: [
+        {
+          word: 'told',
+          meaning: '알려줬다',
+          pronunciation: '/toʊld/',
+        },
+        {
+          word: 'life',
+          meaning: '목숨, 생명',
+          pronunciation: '/laɪf/',
+        },
+        {
+          word: 'reward',
+          meaning: '상',
+          pronunciation: '/rɪˈwɔːrd/',
+        },
+      ],
+    },
+    {
+      korean: '둘째 잔치에서 에스더가 외쳤어요. "이 사람이 우리 모두를 없애려 하고 있어요!"',
+      reference: 'Esther 7:6',
+      english: 'At the second banquet, Esther cried out, "This man is trying to destroy us all!"',
+      words: [
+        {
+          word: 'second',
+          meaning: '두 번째의',
+          pronunciation: '/ˈsɛkənd/',
+        },
+        {
+          word: 'cried out',
+          meaning: '외쳤다',
+          pronunciation: '/kraɪd aʊt/',
+        },
+        {
+          word: 'trying',
+          meaning: '시도하는',
+          pronunciation: '/ˈtraɪɪŋ/',
+        },
+      ],
+    },
+    {
+      korean: '왕은 분노했고, 하만은 자신이 만든 처형대에서 끝을 맞았어요.',
+      reference: 'Esther 7:10',
+      english: 'The king was furious, and Haman met his end on the very gallows he had built.',
+      words: [
+        {
+          word: 'furious',
+          meaning: '격분한',
+          pronunciation: '/ˈfjʊəriəs/',
+        },
+        {
+          word: 'gallows',
+          meaning: '처형대',
+          pronunciation: '/ˈɡæloʊz/',
+        },
+        {
+          word: 'built',
+          meaning: '지었다',
+          pronunciation: '/bɪlt/',
+        },
+      ],
+    },
+    {
+      korean: '왕은 새 칙령을 내렸고, 에스더의 사람들은 모두 안전했어요.',
+      reference: 'Esther 8:11',
+      english: "The king issued a new decree, and Esther's people were all safe.",
+      words: [
+        {
+          word: 'issued',
+          meaning: '발표했다',
+          pronunciation: '/ˈɪʃuːd/',
+        },
+        {
+          word: 'decree',
+          meaning: '칙령',
+          pronunciation: '/dɪˈkriː/',
+        },
+        {
+          word: 'safe',
+          meaning: '안전한',
+          pronunciation: '/seɪf/',
+        },
+      ],
+    },
+    {
+      korean: '그 후로 매년 사람들은 부림절을 지키며 이 구원의 이야기를 기억해요.',
+      reference: 'Esther 9:26',
+      english: 'Ever since, the people celebrate Purim each year to remember this rescue.',
+      words: [
+        {
+          word: 'celebrate',
+          meaning: '기념하다',
+          pronunciation: '/ˈsɛləbreɪt/',
+        },
+        {
+          word: 'Purim',
+          meaning: '부림절',
+          pronunciation: '/ˈpʊərɪm/',
+        },
+        {
+          word: 'rescue',
+          meaning: '구원, 구출',
+          pronunciation: '/ˈrɛskjuː/',
+        },
+      ],
+    },
+  ],
+  quiz: [
+    {
+      question: '에스더가 왕에게 가는 것을 두려워한 이유는?',
+      options: [
+        '부르지 않은 사람이 들어가면 죽을 수 있어서',
+        '왕이 그녀를 알아보지 못할까봐',
+        '길을 잃을까봐',
+        '드레스가 없어서',
+      ],
+      correctIndex: 0,
+      explanation: '페르시아 궁전 법: 왕이 부르지 않은 사람이 들어가면 사형. 왕이 황금 홀(scepter)을 내밀어야 살 수 있어요.',
+    },
+    {
+      question: '모르드개의 가장 유명한 말은 무엇이었나요?',
+      options: [
+        '"너는 바로 이 때를 위해 왕비가 되었는지도 몰라"',
+        '"왕은 너를 사랑하니 안전해"',
+        '"도망치는 게 좋겠다"',
+        '"내가 대신 가겠다"',
+      ],
+      correctIndex: 0,
+      explanation: '"For such a time as this." — 네 자리는 우연이 아니라는 말이에요. 에스더는 이 한마디에 결단해요.',
+    },
+    {
+      question: '왕이 잠 못 든 밤에 발견한 것은?',
+      options: [
+        '모르드개가 자기 목숨을 구한 기록',
+        '에스더의 출신',
+        '하만의 음모 편지',
+        '보물의 위치',
+      ],
+      correctIndex: 0,
+      explanation: '왕은 우연히 잠이 안 와 옛 기록을 읽었고, 모르드개가 자기 목숨을 구했지만 아직 상을 받지 못했음을 알게 돼요. 큰 반전의 시작이에요.',
+    },
+    {
+      question: '이 이야기의 메시지는?',
+      options: [
+        '두려움 속에서도 옳은 자리에 서는 용기',
+        '왕은 항상 친절하다',
+        '잔치는 언제나 즐겁다',
+        '잠을 잘 자는 게 중요하다',
+      ],
+      correctIndex: 0,
+      explanation: '에스더는 두려웠지만 자기 자리에서 도망치지 않았어요. "If I perish, I perish." — 이 결단이 한 민족을 살렸어요.',
+    },
+  ],
+}
+
 export const lessons: Record<string, Lesson> = {
   'creation-1': creationLesson1,
   'creation-2': creationLesson2,
@@ -3564,6 +4274,8 @@ export const lessons: Record<string, Lesson> = {
   'jonah-3': jonahLesson3,
   'daniel-1': danielLesson1,
   'daniel-2': danielLesson2,
+  'esther-1': estherLesson1,
+  'esther-2': estherLesson2,
 }
 
 export function getLesson(storyId: string, lessonNum: string | number): Lesson | undefined {
